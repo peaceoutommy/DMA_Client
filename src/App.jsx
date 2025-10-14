@@ -8,6 +8,8 @@ import Home from "./pages/Home";
 import Authenticate from "./pages/Authenticate";
 import CampaignList from "./pages/Campaign/CampaignList";
 import CampaignCreate from "./pages/Campaign/CampaignCreate";
+
+import CompanyList from "./pages/Company/CompanyList";
 import CompanyCreate from "./pages/Company/CompanyCreate";
 
 const queryClient = new QueryClient({
@@ -39,6 +41,8 @@ export default function App() {
                 <Route path="/authenticate" element={<Authenticate />} />
                 <Route path="/campaigns" element={<CampaignList />} />
                 <Route path="/campaigns/create" element={<CampaignCreate />} />
+
+                <Route path="/companies" element={<CompanyList />} />
                 <Route path="/companies/create" element={<CompanyCreate />} />
               </Routes>
             </div>
