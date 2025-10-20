@@ -70,22 +70,24 @@ export function AppSidebar() {
                             {items.map((item) => (
                                 <div key={item.title}>
                                     <SidebarMenuItem>
-                                        <SidebarMenuButton
-                                            asChild={!item.child}
-                                            onClick={() => item.child && toggleExpand(item.title)}
-                                            className="hover:bg-accent transition-colors rounded-lg"
-                                        >
-                                            {item.child ? (
-                                                <button className="flex items-center w-full gap-2 text-left py-2.5 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center">
-                                                    <item.icon className="h-5 w-5 shrink-0" />
-                                                    <span className="flex-1 font-medium group-data-[collapsible=icon]:hidden">{item.title}</span>
-                                                    {(expanded === item.title ? (
-                                                        <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
-                                                    ) : (
-                                                        <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
-                                                    ))}
-                                                </button>
-                                            ) : (
+                                        {item.child ? (
+                                            <SidebarMenuButton
+                                                onClick={() => toggleExpand(item.title)}
+                                                className="hover:bg-accent transition-colors rounded-lg"
+                                            >
+                                                <item.icon className="h-5 w-5 shrink-0" />
+                                                <span className="flex-1 font-medium group-data-[collapsible=icon]:hidden">{item.title}</span>
+                                                {(expanded === item.title ? (
+                                                    <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
+                                                ) : (
+                                                    <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
+                                                ))}
+                                            </SidebarMenuButton>
+                                        ) : (
+                                            <SidebarMenuButton
+                                                asChild
+                                                className="hover:bg-accent transition-colors rounded-lg"
+                                            >
                                                 <Link 
                                                     to={item.url}
                                                     className="flex items-center gap-2 py-2.5 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center"
@@ -93,8 +95,8 @@ export function AppSidebar() {
                                                     <item.icon className="h-5 w-5 shrink-0" />
                                                     <span className="font-medium group-data-[collapsible=icon]:hidden">{item.title}</span>
                                                 </Link>
-                                            )}
-                                        </SidebarMenuButton>
+                                            </SidebarMenuButton>
+                                        )}
                                     </SidebarMenuItem>
 
                                     {/* Render child items when expanded with animation */}

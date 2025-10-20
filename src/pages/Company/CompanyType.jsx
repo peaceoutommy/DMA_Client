@@ -1,48 +1,75 @@
 import React, { useState } from 'react';
-import { useCompanyTypes, useCreateCompanyType } from '@/hooks/useCompany';
+import { useCompanyTypes, useUpdateCompanyType, useDeleteCompanyType } from '@/hooks/useCompany';
 import { DataTable } from '@/components/Table/DataTable';
+import { DeleteModal } from '@/components/DeleteModal';
 import { columnsCompanyType } from '@/components/Table/ColumnsCompanyType';
 
 export default function CompanyType() {
     const { data, isLoading } = useCompanyTypes();
-    const createCompanyType = useCreateCompanyType();
+    const updateCompanyType = useUpdateCompanyType();
+    const deleteCompanyType = useDeleteCompanyType();
 
-    const [companyTypeData, setCompanyTypeData] = useState('');
-    const [errors, setErrors] = useState({});
+    const [editingItem, setEditingItem] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
 
-    console.log(data)
-
-    const validateForm = () => {
-        const newErrors = {};
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+    const handleEdit = (item) => {
+        setEditingItem(item);
     };
 
-    const handleSubmit = () => {
-        if (validateForm()) {
-            const payload = {
-                name: companyData.name.trim(),
-            };
+    const handleSubmitEdit = (item) => {
+        if (!item.name?.trim()) return;
 
-            createCompanyType.mutate(payload, {
+        updateCompanyType.mutate(item, {
+            onSuccess: () => setEditingItem(null),
+        });
+    };
+
+    const handleCancelEdit = () => {
+        setEditingItem(null);
+    };
+
+    const handleDelete = (item) => {
+        setSelectedItem(item);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (selectedItem) {
+            deleteCompanyType.mutate(selectedItem.id, {
                 onSuccess: () => {
-                    setCompanyTypeData('');
-                    setErrors({});
-
-                    setTimeout(() => {
-                        createCompanyType.reset();
-                    }, 3000);
+                    setIsDeleteModalOpen(false);
+                    setSelectedItem(null);
                 },
             });
         }
     };
 
     if (isLoading) {
-        return <div>Loading...</div>
+        return <div>Loading...</div>;
     }
 
     return (
-        <DataTable columns={columnsCompanyType} data={data} filterColumn="name" showSelected={false} />
+        <>
+            <DataTable
+                columns={columnsCompanyType(
+                    handleEdit,
+                    handleDelete,
+                    editingItem,
+                    setEditingItem,
+                    handleSubmitEdit,
+                    handleCancelEdit
+                )}
+                data={data}
+                filterColumn="name"
+                showSelected={false}
+            />
+            <DeleteModal
+                open={isDeleteModalOpen}
+                item={selectedItem}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onDelete={confirmDelete}
+            />
+        </>
     );
 }
