@@ -11,6 +11,7 @@ import CampaignCreate from "./pages/Campaign/CampaignCreate";
 
 import CompanyList from "./pages/Company/CompanyList";
 import CompanyCreate from "./pages/Company/CompanyCreate";
+import CompanyType from "./pages/Company/CompanyType";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,6 +45,7 @@ export default function App() {
 
                 <Route path="/companies" element={<CompanyList />} />
                 <Route path="/companies/create" element={<CompanyCreate />} />
+                <Route path="/companies/types" element={<CompanyType />} />
               </Routes>
             </div>
 

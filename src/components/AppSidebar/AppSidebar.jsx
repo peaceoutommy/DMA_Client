@@ -34,6 +34,7 @@ const items = [
         child: [
             { title: "List", url: "/companies", icon: Building2 },
             { title: "Create", url: "/companies/create", icon: Building2 },
+            { title: "Types", url: "/companies/types", icon: Building2 },
         ],
     },
 ]

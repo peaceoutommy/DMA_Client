@@ -6,8 +6,6 @@ export default function CompanyList() {
 
     const { data, isLoading } = useCompanies();
 
-    console.log(data);
-
     if (isLoading) {
         return <div>Loading...</div>
     }

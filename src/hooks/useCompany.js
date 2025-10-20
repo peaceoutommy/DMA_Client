@@ -40,3 +40,13 @@ export const useCompanyTypes = () =>{
         queryFn: () => companyService.getAllTypes().then(res => res.data.types),
     });
 }
+
+export const useCreateCompanyType = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data) => companyService.createType(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries(companyKeys.lists());
+        },
+    });
+};

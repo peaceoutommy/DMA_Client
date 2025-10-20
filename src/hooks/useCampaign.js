@@ -6,9 +6,7 @@ export const campaignKeys = {
     all: ['campaigns'],
     lists: () => [...campaignKeys.all, 'list'],
     list: (filters) => [...campaignKeys.lists(), filters],
-    details: () => [...campaignKeys.all, 'detail'],
-    detail: (id) => [...campaignKeys.details(), id],
-    stats: (id) => [...campaignKeys.all, 'stats', id]
+    detail: (id) => [...campaignKeys.all, 'detail', id],
 };
 
 // Hook to fetch all campaigns
