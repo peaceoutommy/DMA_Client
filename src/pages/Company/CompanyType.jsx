@@ -1,17 +1,34 @@
-import React, { useState } from 'react';
-import { useCompanyTypes, useUpdateCompanyType, useDeleteCompanyType } from '@/hooks/useCompany';
+import React, { useEffect, useState } from 'react';
+import { useCompanyTypes, useCreateCompanyType, useUpdateCompanyType, useDeleteCompanyType } from '@/hooks/useCompany';
 import { DataTable } from '@/components/Table/DataTable';
-import { DeleteModal } from '@/components/DeleteModal';
+import { DeleteModal } from '@/components/Modal/DeleteModal';
 import { columnsCompanyType } from '@/components/Table/ColumnsCompanyType';
+import { AddCompanyTypeModal } from '@/components/Modal/AddCompanyTypeModal';
 
 export default function CompanyType() {
     const { data, isLoading } = useCompanyTypes();
+    const createCompanyType = useCreateCompanyType();
     const updateCompanyType = useUpdateCompanyType();
     const deleteCompanyType = useDeleteCompanyType();
 
     const [editingItem, setEditingItem] = useState(null);
+    const [newItem, setNewItem] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+    const handleAdd = () => {
+        setIsAddModalOpen(true);
+    }
+
+    const handleSubmitSave = () => {
+        createCompanyType.mutate(newItem, {
+            onSuccess: () => {
+                setIsAddModalOpen(false);
+                setNewItem(null);
+            },
+        });
+    }
 
     const handleEdit = (item) => {
         setEditingItem(item);
@@ -63,7 +80,18 @@ export default function CompanyType() {
                 data={data}
                 filterColumn="name"
                 showSelected={false}
+                onAdd={handleAdd}
+                addText="Add Company Type"
             />
+
+            <AddCompanyTypeModal
+                open={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+                onSave={handleSubmitSave}
+                newItem={newItem}
+                setNewItem={setNewItem}
+            />
+
             <DeleteModal
                 open={isDeleteModalOpen}
                 item={selectedItem}

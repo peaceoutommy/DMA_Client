@@ -11,8 +11,8 @@ export default function CompanyList() {
     }
 
     return (
-        <div>
+        <>
             <DataTable columns={columnsCompany} data={data} filterColumn="name" showSelected={false} />
-        </div>
+        </>
     )
 }
