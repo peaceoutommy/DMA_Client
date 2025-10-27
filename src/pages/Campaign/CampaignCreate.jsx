@@ -7,14 +7,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { XCircle, Loader2, Target, CheckCircle } from 'lucide-react';
 import { useCreateCampaign } from '@/hooks/useCampaign';
+import { useAuth } from '@/context/AuthContext';
 
 export default function CampaignCreate() {
     const createCampaign = useCreateCampaign();
+     const { user } = useAuth();
 
     const [campaignData, setCampaignData] = useState({
         name: '',
         description: '',
-        companyId: 1,
+        companyId: user?.companyId,
         fundGoal: ''
     });
 
@@ -71,7 +73,7 @@ export default function CampaignCreate() {
                     setCampaignData({
                         name: '',
                         description: '',
-                        companyId: 1,
+                        companyId: user?.companyId,
                         fundGoal: ''
                     });
                     setErrors({});
@@ -156,7 +158,7 @@ export default function CampaignCreate() {
                         <Label htmlFor="campaign-company">Company</Label>
                         <Input
                             id="campaign-company"
-                            value={campaignData.companyId}
+                            value={campaignData.companyId ? campaignData.companyId : 'N/A'}
                             disabled
                             className="bg-muted"
                         />
