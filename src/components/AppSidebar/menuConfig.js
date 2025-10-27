@@ -1,12 +1,13 @@
 import { Home, BookText, BookPlus, ChevronDown, ChevronRight, Building2 } from "lucide-react"
 
 export const getMenuItems = (user) => {
+    const isAdmin = user?.role === "ADMIN";
+    const isCompanyAccount = user?.role === "COMPANY_ACCOUNT";
     const hasCompany = !!user?.companyId;
-    const isOwner = user?.companyRole === 'OWNER';
-    const isAdmin = user?.companyRole === 'ADMIN';
+    const isOwner = user?.companyRole === "OWNER";
 
     return [
-        { title: "Home", url: "/", icon: Home },
+        { title: "Home", url: "/", icon: Home, visible: true },
         {
             title: "Campaigns",
             url: "/campaigns",
@@ -14,7 +15,7 @@ export const getMenuItems = (user) => {
             visible: true,
             child: [
                 { title: "List", url: "/campaigns", icon: BookText, visible: true },
-                { title: "Create", url: "/campaigns/create", icon: BookPlus, visible: true },
+                { title: "Create", url: "/campaigns/create", icon: BookPlus, visible: hasCompany },
             ],
         },
         {
@@ -24,15 +25,15 @@ export const getMenuItems = (user) => {
             visible: true,
             child: [
                 { title: "List", url: "/companies", icon: Building2, visible: true },
-                { title: "Create", url: "/companies/create", icon: Building2, visible: true },
-                { title: "Types", url: "/companies/types", icon: Building2, visible: true },
+                { title: "Create", url: "/companies/create", icon: Building2, visible: isCompanyAccount || isAdmin },
+                { title: "Types", url: "/companies/types", icon: Building2, visible: isAdmin },
             ],
         },
         {
             title: "Manage company",
             url: `/companies/${user?.companyId}/manage`,
             icon: Building2,
-            visible: hasCompany,
+            visible: isOwner,
             child: [
                 { title: "Employees", url: `/companies/${user?.companyId}/employees`, icon: Building2, visible: hasCompany },
             ],

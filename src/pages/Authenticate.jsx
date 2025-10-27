@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { XCircle, Loader2 } from 'lucide-react';
+import { XCircle, Loader2, User, Building2 } from 'lucide-react';
 
 export default function Authenticate() {
     const navigate = useNavigate();
@@ -21,7 +21,8 @@ export default function Authenticate() {
         username: '',
         phoneNumber: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        companyAccount: false
     });
 
     const [errors, setErrors] = useState({});
@@ -159,12 +160,6 @@ export default function Authenticate() {
                             )}
                         </div>
 
-                        <div className="flex items-center justify-end">
-                            <button className="text-sm text-blue-600 hover:underline">
-                                Forgot password?
-                            </button>
-                        </div>
-
                         <Button
                             onClick={handleLogin}
                             className="w-full"
@@ -183,55 +178,109 @@ export default function Authenticate() {
 
                     <TabsContent value="register" className="space-y-3">
                         {registerMutation.isError && (
-                            <Alert variant="destructive" className="py-2">
+                            <Alert variant="destructive">
                                 <XCircle className="h-4 w-4" />
-                                <AlertDescription className="text-sm">
-                                    Registration failed. Please check your information.
+                                <AlertDescription>
+                                    {registerMutation.error?.message || 'Registration failed. Please try again.'}
                                 </AlertDescription>
                             </Alert>
                         )}
 
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="space-y-2">
-                                <Label htmlFor="register-name">First name *</Label>
-                                <Input
-                                    id="register-name"
-                                    placeholder="John"
-                                    value={registerData.firstName}
-                                    onChange={(e) => {
-                                        setRegisterData({ ...registerData, firstName: e.target.value });
-                                        setErrors({ ...errors, firstName: '' });
-                                    }}
-                                    className={errors.firstName ? 'border-red-500' : ''}
-                                />
-                                {errors.firstName && (
-                                    <p className="text-xs text-red-500">{errors.firstName}</p>
-                                )}
-                            </div>
+                        {/* Account Type Selection */}
+                        <div className="space-y-2">
+                            <Label className="text-sm font-medium">Account Type *</Label>
+                            <div className="grid grid-cols-2 gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setRegisterData({ ...registerData, companyAccount: false })}
+                                    className={`relative flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-200 ${
+                                        !registerData.companyAccount
+                                            ? 'border-primary bg-primary/5 shadow-sm'
+                                            : 'border-gray-200 hover:border-gray-300 bg-white'
+                                    }`}
+                                >
+                                    <User className={`h-8 w-8 mb-2 ${!registerData.companyAccount ? 'text-primary' : 'text-gray-400'}`} />
+                                    <span className={`text-sm font-medium ${!registerData.companyAccount ? 'text-primary' : 'text-gray-700'}`}>
+                                        Donor Account
+                                    </span>
+                                    <span className="text-xs text-gray-500 mt-1 text-center">
+                                        For individuals
+                                    </span>
+                                    {!registerData.companyAccount && (
+                                        <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                                            <svg className="w-3 h-3 text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                    )}
+                                </button>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="register-last-name">Last name *</Label>
-                                <Input
-                                    id="register-last-name"
-                                    placeholder="Doe"
-                                    value={registerData.lastName}
-                                    onChange={(e) => {
-                                        setRegisterData({ ...registerData, lastName: e.target.value });
-                                        setErrors({ ...errors, lastName: '' });
-                                    }}
-                                    className={errors.lastName ? 'border-red-500' : ''}
-                                />
-                                {errors.lastName && (
-                                    <p className="text-xs text-red-500">{errors.lastName}</p>
-                                )}
+                                <button
+                                    type="button"
+                                    onClick={() => setRegisterData({ ...registerData, companyAccount: true })}
+                                    className={`relative flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-200 ${
+                                        registerData.companyAccount
+                                            ? 'border-primary bg-primary/5 shadow-sm'
+                                            : 'border-gray-200 hover:border-gray-300 bg-white'
+                                    }`}
+                                >
+                                    <Building2 className={`h-8 w-8 mb-2 ${registerData.companyAccount ? 'text-primary' : 'text-gray-400'}`} />
+                                    <span className={`text-sm font-medium ${registerData.companyAccount ? 'text-primary' : 'text-gray-700'}`}>
+                                        Company Account
+                                    </span>
+                                    <span className="text-xs text-gray-500 mt-1 text-center">
+                                        For organizations
+                                    </span>
+                                    {registerData.companyAccount && (
+                                        <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                                            <svg className="w-3 h-3 text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                    )}
+                                </button>
                             </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="register-first-name">First name *</Label>
+                            <Input
+                                id="register-first-name"
+                                placeholder="John"
+                                value={registerData.firstName}
+                                onChange={(e) => {
+                                    setRegisterData({ ...registerData, firstName: e.target.value });
+                                    setErrors({ ...errors, firstName: '' });
+                                }}
+                                className={errors.firstName ? 'border-red-500' : ''}
+                            />
+                            {errors.firstName && (
+                                <p className="text-sm text-red-500">{errors.firstName}</p>
+                            )}
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="register-last-name">Last name *</Label>
+                            <Input
+                                id="register-last-name"
+                                placeholder="Doe"
+                                value={registerData.lastName}
+                                onChange={(e) => {
+                                    setRegisterData({ ...registerData, lastName: e.target.value });
+                                    setErrors({ ...errors, lastName: '' });
+                                }}
+                                className={errors.lastName ? 'border-red-500' : ''}
+                            />
+                            {errors.lastName && (
+                                <p className="text-sm text-red-500">{errors.lastName}</p>
+                            )}
                         </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="register-middle-names">Middle names *</Label>
                             <Input
                                 id="register-middle-names"
-                                placeholder="Jane"
+                                placeholder="Michael"
                                 value={registerData.middleNames}
                                 onChange={(e) => {
                                     setRegisterData({ ...registerData, middleNames: e.target.value });
