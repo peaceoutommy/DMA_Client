@@ -18,7 +18,6 @@ export function AddCompanyTypeModal({ open, onClose, onSave, newItem, setNewItem
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Add company type</DialogTitle>
-                    <DialogDescription>Add a company type here. Click save when you&apos;re done.</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4">
                     <div className="grid gap-3">

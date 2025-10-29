@@ -77,7 +77,7 @@ export default function CompanyType() {
                     handleSubmitEdit,
                     handleCancelEdit
                 )}
-                data={data}
+                data={data || []}
                 filterColumn="name"
                 showSelected={false}
                 onAdd={handleAdd}

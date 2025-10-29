@@ -11,8 +11,11 @@ import CampaignCreate from "./pages/Campaign/CampaignCreate";
 
 import CompanyList from "./pages/Company/CompanyList";
 import CompanyCreate from "./pages/Company/CompanyCreate";
-import CompanyType from "./pages/Company/CompanyType";
+import CompanyRoleManagement from "./pages/Company/CompanyRoleManagement";
 import Employee from "./pages/Company/Employee";
+
+import CompanyType from "./pages/Admin/CompanyType";
+import PermissionManagement from "./pages/Admin/PermissionManagement";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,8 +49,11 @@ export default function App() {
 
                 <Route path="/companies" element={<CompanyList />} />
                 <Route path="/companies/create" element={<CompanyCreate />} />
+                <Route path="/companies/roles" element={<CompanyRoleManagement />} />
+                <Route path="/companies/employees" element={<Employee />} />
+
+                <Route path="/companies/permissions" element={<PermissionManagement />} />
                 <Route path="/companies/types" element={<CompanyType />} />
-                <Route path="/companies/:companyId/employees" element={<Employee />} />
               </Routes>
             </div>
 

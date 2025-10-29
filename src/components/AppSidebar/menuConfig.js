@@ -1,4 +1,4 @@
-import { Home, BookText, BookPlus, ChevronDown, ChevronRight, Building2 } from "lucide-react"
+import { Home, BookText, BookPlus, Building2, FolderLock } from "lucide-react"
 
 export const getMenuItems = (user) => {
     const isAdmin = user?.role === "ADMIN";
@@ -10,7 +10,6 @@ export const getMenuItems = (user) => {
         { title: "Home", url: "/", icon: Home, visible: true },
         {
             title: "Campaigns",
-            url: "/campaigns",
             icon: BookText,
             visible: true,
             child: [
@@ -20,22 +19,29 @@ export const getMenuItems = (user) => {
         },
         {
             title: "Companies",
-            url: "/companies",
             icon: Building2,
-            visible: true,
+            visible: user,
             child: [
                 { title: "List", url: "/companies", icon: Building2, visible: true },
-                { title: "Create", url: "/companies/create", icon: Building2, visible: isCompanyAccount || isAdmin },
-                { title: "Types", url: "/companies/types", icon: Building2, visible: isAdmin },
+                { title: "Create", url: "/companies/create", icon: Building2, visible: isCompanyAccount},
             ],
         },
         {
             title: "Manage company",
-            url: `/companies/${user?.companyId}/manage`,
             icon: Building2,
-            visible: isOwner,
+            visible: hasCompany,
             child: [
-                { title: "Employees", url: `/companies/${user?.companyId}/employees`, icon: Building2, visible: hasCompany },
+                { title: "Roles", url: `/companies/roles`, icon: Building2, visible: hasCompany },
+                { title: "Employees", url: `/companies/employees`, icon: Building2, visible: hasCompany },
+            ],
+        },
+        {
+            title: "Admin",
+            icon: FolderLock,
+            visible: isAdmin,
+            child: [
+                { title: "Company Types", url: "/companies/types", icon: Building2, visible: isAdmin },
+                { title: "Permissions", url: "/companies/permissions", icon: Building2, visible: isAdmin },
             ],
         }
     ]
