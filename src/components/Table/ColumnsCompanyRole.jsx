@@ -24,8 +24,8 @@ export const columnsCompanyRole = [
             <div className="flex gap-1">
                 <Button
                     variant="ghost"
-                    className="h-8 w-8 p-0"
-                   
+                    className="h-8 w-8 p-0 hover:text-blue-700"
+
                 >
                     <SquarePen className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
@@ -33,9 +33,9 @@ export const columnsCompanyRole = [
                 <Button
                     variant="ghost"
                     className="h-8 w-8 p-0"
-                    
+
                 >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-4 w-4 hover:text-red-600" />
                     <span className="sr-only">Delete</span>
                 </Button>
             </div>

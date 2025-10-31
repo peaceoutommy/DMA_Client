@@ -34,7 +34,7 @@ export const columnsPermission = [
             <div className="flex gap-1">
                 <Button
                     variant="ghost"
-                    className="h-8 w-8 p-0"
+                    className="h-8 w-8 p-0 hover:text-blue-700"
 
                 >
                     <SquarePen className="h-4 w-4" />
@@ -42,7 +42,7 @@ export const columnsPermission = [
                 </Button>
                 <Button
                     variant="ghost"
-                    className="h-8 w-8 p-0"
+                    className="h-8 w-8 p-0 hover:text-red-600"
 
                 >
                     <Trash2 className="h-4 w-4" />

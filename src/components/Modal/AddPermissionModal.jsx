@@ -10,8 +10,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
-export function AddPermissionModal({ open, onClose, onSave, newItem, setNewItem }) {
+export function AddPermissionModal({ open, onClose, onSave, newItem, setNewItem, types }) {
     return (
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px]">
@@ -41,13 +48,21 @@ export function AddPermissionModal({ open, onClose, onSave, newItem, setNewItem 
                     </div>
                     <div className="grid gap-3">
                         <Label htmlFor="type">Type</Label>
-                        <Input
-                            id="type"
-                            name="type"
-                            placeholder="read"
+                        <Select
                             value={newItem?.type || ''}
-                            onChange={(e) => setNewItem({ ...newItem, type: e.target.value })}
-                        />
+                            onValueChange={(value) => setNewItem({ ...newItem, type: value })}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {types?.map((type) => (
+                                    <SelectItem key={type} value={type}>
+                                        {type}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
                 <DialogFooter>

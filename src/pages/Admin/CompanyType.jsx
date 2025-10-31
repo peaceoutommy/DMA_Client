@@ -4,6 +4,7 @@ import { DataTable } from '@/components/Table/DataTable';
 import { DeleteModal } from '@/components/Modal/DeleteModal';
 import { columnsCompanyType } from '@/components/Table/ColumnsCompanyType';
 import { AddCompanyTypeModal } from '@/components/Modal/AddCompanyTypeModal';
+import { EditCompanyTypeModal } from '@/components/Modal/EditCompanyTypeModal';
 
 export default function CompanyType() {
     const { data, isLoading } = useCompanyTypes();
@@ -11,14 +12,20 @@ export default function CompanyType() {
     const updateCompanyType = useUpdateCompanyType();
     const deleteCompanyType = useDeleteCompanyType();
 
-    const [editingItem, setEditingItem] = useState(null);
+    const [editItem, setEditItem] = useState(null);
     const [newItem, setNewItem] = useState(null);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     const handleAdd = () => {
         setIsAddModalOpen(true);
+    }
+
+    const handleCloseAddModal = () => {
+        setIsAddModalOpen(false);
+        setNewItem(null);
     }
 
     const handleSubmitSave = () => {
@@ -31,19 +38,24 @@ export default function CompanyType() {
     }
 
     const handleEdit = (item) => {
-        setEditingItem(item);
+        setIsEditModalOpen(true);
+        setEditItem(item);
     };
 
-    const handleSubmitEdit = (item) => {
-        if (!item.name?.trim()) return;
+    const handleCloseEditModal = () => {
+        setIsEditModalOpen(false);
+        setEditItem(null);
+    }
 
-        updateCompanyType.mutate(item, {
-            onSuccess: () => setEditingItem(null),
+    const handleSubmitEdit = () => {
+        if (!editItem.name?.trim()) return;
+
+        updateCompanyType.mutate(editItem, {
+            onSuccess: () => {
+                setEditItem(null);
+                setIsEditModalOpen(false);
+            }
         });
-    };
-
-    const handleCancelEdit = () => {
-        setEditingItem(null);
     };
 
     const handleDelete = (item) => {
@@ -69,14 +81,11 @@ export default function CompanyType() {
     return (
         <>
             <DataTable
-                columns={columnsCompanyType(
-                    handleEdit,
-                    handleDelete,
-                    editingItem,
-                    setEditingItem,
-                    handleSubmitEdit,
-                    handleCancelEdit
-                )}
+                columns={
+                    columnsCompanyType(
+                        handleEdit,
+                        handleDelete,
+                    )}
                 data={data || []}
                 filterColumn="name"
                 showSelected={false}
@@ -86,10 +95,18 @@ export default function CompanyType() {
 
             <AddCompanyTypeModal
                 open={isAddModalOpen}
-                onClose={() => setIsAddModalOpen(false)}
+                onClose={handleCloseAddModal}
                 onSave={handleSubmitSave}
                 newItem={newItem}
                 setNewItem={setNewItem}
+            />
+
+            <EditCompanyTypeModal
+                open={isEditModalOpen}
+                onClose={handleCloseEditModal}
+                onSave={handleSubmitEdit}
+                editItem={editItem}
+                setEditItem={setEditItem}
             />
 
             <DeleteModal

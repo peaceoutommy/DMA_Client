@@ -12,13 +12,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "../ui/textarea"
 
-export function AddCompanyTypeModal({ open, onClose, onSave, newItem, setNewItem }) {
+export function EditCompanyTypeModal({ open, onClose, onSave, editItem, setEditItem }) {
     return (
 
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add company type</DialogTitle>
+                    <DialogTitle>Edit company type</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4">
                     <div className="grid gap-3">
@@ -27,8 +27,8 @@ export function AddCompanyTypeModal({ open, onClose, onSave, newItem, setNewItem
                             id="name"
                             name="name"
                             placeholder="Public Limited Company"
-                            value={newItem != null ? newItem.name : ''}
-                            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                            value={editItem != null ? editItem.name : ''}
+                            onChange={(e) => setEditItem({ ...editItem, name: e.target.value })}
                         />
                     </div>
                     <div className="grid gap-3">
@@ -37,8 +37,8 @@ export function AddCompanyTypeModal({ open, onClose, onSave, newItem, setNewItem
                             id="description"
                             name="description"
                             placeholder="Public Limited Company"
-                            value={newItem != null ? newItem.description : ''}
-                            onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                            value={editItem != null ? editItem.description : ''}
+                            onChange={(e) => setEditItem({ ...editItem, description: e.target.value })}
                         />
                     </div>
                 </div>

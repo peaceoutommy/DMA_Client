@@ -1,7 +1,5 @@
 import { ArrowUpDown, SquarePen, Trash2, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
@@ -9,14 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export const columnsCompanyType = (
-  onEdit,
-  onDelete,
-  editingItem,
-  setEditingItem,
-  onSubmitEdit,
-  onCancelEdit
-) => [
+export const columnsCompanyType = (onEdit, onDelete) => [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -28,41 +19,8 @@ export const columnsCompanyType = (
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => {
-      const isEditing = editingItem?.id === row.original.id;
-      return isEditing ? (
-        <div className="space-y-2">
-          <Input
-            placeholder="Enter company type name"
-            value={editingItem.name}
-            autoFocus
-            onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && e.ctrlKey) {
-                onSubmitEdit(editingItem);
-              } else if (e.key === 'Escape') {
-                onCancelEdit();
-              }
-            }}
-          />
-          <Textarea
-            placeholder="Enter description (optional)"
-            value={editingItem.description || ""}
-            onChange={(e) => setEditingItem({ ...editingItem, description: e.target.value })}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && e.ctrlKey) {
-                onSubmitEdit(editingItem);
-              } else if (e.key === 'Escape') {
-                onCancelEdit();
-              }
-            }}
-            className="min-h-[60px] text-sm"
-          />
-          <div className="text-xs text-muted-foreground">
-            Press Ctrl+Enter to save, Esc to cancel
-          </div>
-        </div>
-      ) : (
+    cell: ({ row }) => { // ← Missing return here!
+      return ( // ← ADD THIS
         <div className="flex items-center gap-2">
           <div className="font-medium">{row.getValue("name")}</div>
           {row.original.description && (
@@ -72,13 +30,13 @@ export const columnsCompanyType = (
                   <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-sm">
-                  <p>{row.original.description}</p>
+                  <p className="text-sm">{row.original.description}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}
         </div>
-      );
+      ); // ← ADD THIS
     },
   },
   {
@@ -88,7 +46,7 @@ export const columnsCompanyType = (
       <div className="flex gap-1">
         <Button
           variant="ghost"
-          className="h-8 w-8 p-0"
+          className="h-8 w-8 p-0 hover:text-blue-700"
           onClick={() => onEdit(row.original)}
         >
           <SquarePen className="h-4 w-4" />
@@ -96,7 +54,7 @@ export const columnsCompanyType = (
         </Button>
         <Button
           variant="ghost"
-          className="h-8 w-8 p-0"
+          className="h-8 w-8 p-0 hover:text-red-600"
           onClick={() => onDelete(row.original)}
         >
           <Trash2 className="h-4 w-4" />

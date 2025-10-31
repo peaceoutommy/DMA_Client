@@ -5,8 +5,7 @@ export const companyRolePermissionKeys = {
     all: ['companyRolePermissions'],
     lists: () => [...companyRolePermissionKeys.all, 'list'],
     list: (filters) => [...companyRolePermissionKeys.lists(), filters],
-    details: () => [...companyRolePermissionKeys.all, 'detail'],
-    detail: (id) => [...companyRolePermissionKeys.details(), id],
+    types: () => [...companyRolePermissionKeys.all, 'types'],
 };
 
 export const useCompanyRolePermissions = () => {
@@ -24,3 +23,10 @@ export const useCreateCompanyRolePermission = () => {
         },
     });
 };
+
+export const useCompanyRolePermissionTypes = () =>{
+    return useQuery({
+        queryKey: companyRolePermissionKeys.types(),
+        queryFn: () => companyRolePermissionService.getAllTypes().then(res => res.data.types),
+    })
+}

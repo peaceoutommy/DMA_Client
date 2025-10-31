@@ -8,5 +8,9 @@ export const companyRolePermissionService = {
     async create(permissionData) {
         const data = await api.post('/companies/roles/permission', permissionData);
         return data;
+    },
+    async getAllTypes(){
+        const data = await api.get('/companies/roles/permissions/types')
+        return data;
     }
 };
