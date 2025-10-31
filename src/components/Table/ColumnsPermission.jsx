@@ -1,7 +1,7 @@
 import { ArrowUpDown, SquarePen, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-export const columnsPermission = [
+export const columnsPermission = (onEdit, onDelete) => [
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -35,7 +35,7 @@ export const columnsPermission = [
                 <Button
                     variant="ghost"
                     className="h-8 w-8 p-0 hover:text-blue-700"
-
+                    onClick={() => onEdit(row.original)}
                 >
                     <SquarePen className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
@@ -43,7 +43,7 @@ export const columnsPermission = [
                 <Button
                     variant="ghost"
                     className="h-8 w-8 p-0 hover:text-red-600"
-
+                    onClick={() => onDelete(row.original)}
                 >
                     <Trash2 className="h-4 w-4" />
                     <span className="sr-only">Delete</span>

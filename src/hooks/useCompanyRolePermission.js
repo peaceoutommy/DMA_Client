@@ -24,6 +24,26 @@ export const useCreateCompanyRolePermission = () => {
     });
 };
 
+export const useUpdateCompanyRolePermission = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (updatedPermission) => companyRolePermissionService.update(updatedPermission),
+        onSuccess: () => {
+            queryClient.invalidateQueries(companyRolePermissionKeys.list());
+        },
+    });
+};
+
+export const useDeleteCompanyRolePermission = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id) => companyRolePermissionService.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries(companyRolePermissionKeys.list());
+        },
+    });
+};
+
 export const useCompanyRolePermissionTypes = () =>{
     return useQuery({
         queryKey: companyRolePermissionKeys.types(),

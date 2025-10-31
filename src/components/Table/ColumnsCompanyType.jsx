@@ -19,8 +19,8 @@ export const columnsCompanyType = (onEdit, onDelete) => [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => { // ← Missing return here!
-      return ( // ← ADD THIS
+    cell: ({ row }) => {
+      return (
         <div className="flex items-center gap-2">
           <div className="font-medium">{row.getValue("name")}</div>
           {row.original.description && (
@@ -36,7 +36,7 @@ export const columnsCompanyType = (onEdit, onDelete) => [
             </TooltipProvider>
           )}
         </div>
-      ); // ← ADD THIS
+      );
     },
   },
   {
