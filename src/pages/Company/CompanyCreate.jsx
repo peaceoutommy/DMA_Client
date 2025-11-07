@@ -3,20 +3,26 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useCreateCompany, useCompanyTypes } from '@/hooks/useCompany';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from "sonner"
 
 export default function CompanyCreate() {
     const createCompany = useCreateCompany();
     const { data, isLoading } = useCompanyTypes();
+    const { user } = useAuth();
 
     const [companyData, setCompanyData] = useState({
+        userId: null,
         name: '',
-        typeId: 1,
+        typeId: null,
         registrationNumber: '',
         taxId: ''
     });
+
+    console.log(user)
 
     const [errors, setErrors] = useState({});
 
@@ -48,6 +54,7 @@ export default function CompanyCreate() {
     const handleSubmit = () => {
         if (validateForm()) {
             const payload = {
+                userId: user.id,
                 name: companyData.name.trim(),
                 typeId: companyData.typeId,
                 registrationNumber: companyData.registrationNumber.trim(),
@@ -57,20 +64,21 @@ export default function CompanyCreate() {
             createCompany.mutate(payload, {
                 onSuccess: () => {
                     setCompanyData({
+                        userId: null,
                         name: '',
-                        typeId: 1,
+                        typeId: null,
                         registrationNumber: '',
                         taxId: ''
                     });
                     setErrors({});
-
-                    setTimeout(() => {
-                        createCompany.reset();
-                    }, 3000);
                 },
             });
         }
     };
+
+    if(!user){
+        return <div>Loading...</div>
+    }
 
     return (
         <Card className="w-full max-w-md shadow-2xl border-0">

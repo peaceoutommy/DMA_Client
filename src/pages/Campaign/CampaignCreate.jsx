@@ -61,6 +61,9 @@ export default function CampaignCreate() {
 
     const handleSubmit = () => {
         if (validateForm()) {
+
+            toast.loading("Adding campaign...", { id: "loadingToast", position: "top-center" })
+
             const payload = {
                 name: campaignData.name.trim(),
                 description: campaignData.description.trim(),
@@ -78,9 +81,7 @@ export default function CampaignCreate() {
                     });
                     setErrors({});
 
-                    setTimeout(() => {
-                        createCampaign.reset();
-                    }, 3000);
+                    toast.success("Campaign added", { id: "loadingToast", position: "top-center" })
                 },
             });
         }

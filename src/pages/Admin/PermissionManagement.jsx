@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useCompanyRolePermissions, useCompanyRolePermissionTypes, useCreateCompanyRolePermission, useDeleteCompanyRolePermission, useUpdateCompanyRolePermission } from "@/hooks/useCompanyRolePermission";
+import { toast } from "sonner"
 import { DataTable } from "@/components/Table/DataTable";
 import { DeleteModal } from "@/components/Modal/DeleteModal";
 import { columnsPermission } from "@/components/Table/ColumnsPermission";
@@ -46,10 +47,23 @@ export default function PermissionManagement() {
     }
 
     const handleSubmitSave = () => {
+        toast.loading("Adding permission...", { id: "loadingToast", position: "top-center" })
         createPermissionMutation.mutate(newItem, {
             onSuccess: () => {
                 setIsAddModalOpen(false);
                 setNewItem(null);
+                toast.success("Permission added", { id: "loadingToast", position: "top-center" })
+            },
+            onError: (error) => {
+                const errorMessage = error.response?.data?.message ||
+                    error.message ||
+                    "Failed to add permission";
+
+                toast.error("Failed to add permission", {
+                    id: loadingToast,
+                    position: "top-center",
+                    description: errorMessage,
+                });
             }
         });
     }
@@ -66,11 +80,24 @@ export default function PermissionManagement() {
 
     const handleSubmitEditSave = () => {
         if (!editItem.name?.trim()) return;
+        toast.loading("Updating permission...", { id: "loadingToast", position: "top-center" })
 
         updatePermissionMutation.mutate(editItem, {
             onSuccess: () => {
                 setEditItem(null);
                 setIsEditModalOpen(false);
+                toast.success("Permission updated", { id: "loadingToast", position: "top-center" })
+            },
+            onError: (error) => {
+                const errorMessage = error.response?.data?.message ||
+                    error.message ||
+                    "Failed to update permission";
+
+                toast.error("Failed to update permission", {
+                    id: loadingToast,
+                    position: "top-center",
+                    description: errorMessage,
+                });
             }
         });
     }
@@ -82,11 +109,24 @@ export default function PermissionManagement() {
 
     const confirmDelete = () => {
         if (selectedItem) {
+            toast.loading("Deleting permission...", { id: "loadingToast", position: "top-center" })
             deletePermissionMutation.mutate(selectedItem.id, {
                 onSuccess: () => {
                     setIsDeleteModalOpen(false);
                     setSelectedItem(null);
-                }
+                    toast.success("Permission has been deleted", { id: "loadingToast", position: "top-center" })
+                },
+                onError: (error) => {
+                const errorMessage = error.response?.data?.message ||
+                    error.message ||
+                    "Failed to delete permission";
+
+                toast.error("Failed to delete permission", {
+                    id: loadingToast,
+                    position: "top-center",
+                    description: errorMessage,
+                });
+            }
             });
         }
     }

@@ -1,7 +1,7 @@
 import { ArrowUpDown, SquarePen, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-export const columnsCompanyRole = [
+export const columnsCompanyRole = (onEdit, onDelete) => [
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -25,17 +25,17 @@ export const columnsCompanyRole = [
                 <Button
                     variant="ghost"
                     className="h-8 w-8 p-0 hover:text-blue-700"
-
+                    onClick={() => onEdit(row.original)}
                 >
                     <SquarePen className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
                 </Button>
                 <Button
                     variant="ghost"
-                    className="h-8 w-8 p-0"
-
+                    className="h-8 w-8 p-0 hover:text-red-600"
+                    onClick={() => onDelete(row.original)}
                 >
-                    <Trash2 className="h-4 w-4 hover:text-red-600" />
+                    <Trash2 className="h-4 w-4" />
                     <span className="sr-only">Delete</span>
                 </Button>
             </div>

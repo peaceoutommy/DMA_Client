@@ -29,10 +29,12 @@ export default function CompanyType() {
     }
 
     const handleSubmitSave = () => {
+        toast.loading("Adding company type...", { id: "loadingToast", position: "top-center" })
         createCompanyType.mutate(newItem, {
             onSuccess: () => {
                 setIsAddModalOpen(false);
                 setNewItem(null);
+                toast.success("Company type added", { id: "loadingToast", position: "top-center" })
             },
         });
     }
@@ -49,11 +51,13 @@ export default function CompanyType() {
 
     const handleSubmitEdit = () => {
         if (!editItem.name?.trim()) return;
+        toast.loading("Updating company type...", { id: "loadingToast", position: "top-center" })
 
         updateCompanyType.mutate(editItem, {
             onSuccess: () => {
                 setEditItem(null);
                 setIsEditModalOpen(false);
+                toast.success("Company type updated", { id: "loadingToast", position: "top-center" })
             }
         });
     };
@@ -64,11 +68,13 @@ export default function CompanyType() {
     };
 
     const confirmDelete = () => {
+        toast.loading("Deleting company type...", { id: "loadingToast", position: "top-center" })
         if (selectedItem) {
             deleteCompanyType.mutate(selectedItem.id, {
                 onSuccess: () => {
                     setIsDeleteModalOpen(false);
                     setSelectedItem(null);
+                    toast.success("Company type deleted", { id: "loadingToast", position: "top-center" })
                 },
             });
         }

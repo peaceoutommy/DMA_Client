@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from "./context/AuthContext";
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/AppSidebar/AppSidebar";
+import { Toaster } from "@/components/ui/sonner"
 
 import Home from "./pages/Home";
 import Authenticate from "./pages/Authenticate";
@@ -12,7 +13,7 @@ import CampaignCreate from "./pages/Campaign/CampaignCreate";
 import CompanyList from "./pages/Company/CompanyList";
 import CompanyCreate from "./pages/Company/CompanyCreate";
 import CompanyRoleManagement from "./pages/Company/CompanyRoleManagement";
-import Employee from "./pages/Company/Employee";
+import Employee from "./pages/Company/EmployeeManagement";
 
 import CompanyType from "./pages/Admin/CompanyType";
 import PermissionManagement from "./pages/Admin/PermissionManagement";
@@ -56,7 +57,7 @@ export default function App() {
                 <Route path="/companies/types" element={<CompanyType />} />
               </Routes>
             </div>
-
+            <Toaster />
           </SidebarProvider>
         </Router>
 
