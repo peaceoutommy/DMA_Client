@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 
 export const columnsEmployee = (onEdit, onDelete) => [
     {
-        accessorKey: "first name",
+        accessorKey: "firstName",
         header: ({ column }) => {
             return (
                 <Button
@@ -18,7 +18,7 @@ export const columnsEmployee = (onEdit, onDelete) => [
         cell: ({ row }) => <div className="font-medium">{row.getValue("firstName")}</div>,
     },
     {
-        accessorKey: "last name",
+        accessorKey: "lastName",
         header: ({ column }) => {
             return (
                 <Button
@@ -48,7 +48,7 @@ export const columnsEmployee = (onEdit, onDelete) => [
         cell: ({ row }) => <div className="font-medium">{row.getValue("email")}</div>,
     },
     {
-        accessorKey: "role",
+        accessorKey: "companyRoleName",
         header: ({ column }) => {
             return (
                 <Button

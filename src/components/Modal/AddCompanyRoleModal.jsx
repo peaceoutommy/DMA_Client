@@ -17,6 +17,9 @@ import { Shield, Check } from "lucide-react"
 
 export function AddCompanyRoleModal({ open, onClose, onSave, newItem, setNewItem, permissions, companyId }) {
 
+    // ADD DEBOUNCE LATER
+
+    
     useEffect(() => {
         if (open && companyId) {
             setNewItem(prev => ({ ...prev, companyId: companyId }));

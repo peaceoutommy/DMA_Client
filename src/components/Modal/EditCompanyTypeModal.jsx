@@ -16,7 +16,10 @@ export function EditCompanyTypeModal({ open, onClose, onSave, editItem, setEditI
     return (
 
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent
+                className="sm:max-w-[425px]"
+                onOpenAutoFocus={(e) => e.preventDefault()}
+            >
                 <DialogHeader>
                     <DialogTitle>Edit company type</DialogTitle>
                 </DialogHeader>

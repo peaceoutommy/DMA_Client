@@ -1,8 +1,8 @@
 import api from "./api";
 
 export const companyRoleService = {
-    async getAll(id) {
-        const data = await api.get(`/companies/roles/${id}`);
+    async getAll(companyId) {
+        const data = await api.get(`/companies/roles/${companyId}`);
         return data;
     },
     async create(roleData) {

@@ -7,15 +7,16 @@ import { columnsCompanyRole } from '@/components/Table/ColumnsCompanyRole';
 import { DataTable } from "@/components/Table/DataTable"
 import { DeleteModal } from '@/components/Modal/DeleteModal';
 import { toast } from "sonner"
+import { EditCompanyRoleModal } from '@/components/Modal/EditCompanyRoleModal';
 
 export default function CompanyRoleManagement() {
     const { user } = useAuth();
     const companyId = user?.companyId;
 
-    const { data, isLoading } = useCompanyRoles(companyId);
+    const { data:companyRolesData, isLoading:companyRolesLoading } = useCompanyRoles(companyId);
     const createRole = useCreateCompanyRole();
     const deleteRole = useDeleteCompanyRole();
-    const { data: permissionData, isLoading: permissioIsLoading } = useCompanyRolePermissions();
+    const { data: permissionData, isLoading: permissionIsLoading } = useCompanyRolePermissions();
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -30,12 +31,14 @@ export default function CompanyRoleManagement() {
         setIsAddModalOpen(true);
     }
 
-    const handleEdit = (item) => {
-        console.log("Edit role", item);
+    const handleEdit = (role) => {
+        const roleWithPermIds = replacePermissionObjectsByIds(role);
+        setEditItem(roleWithPermIds);
+        setIsEditModalOpen(true);
     }
 
-    const handleDelete = (item) => {
-        setSelectedItem(item)
+    const handleDelete = (role) => {
+        setSelectedItem(role)
         setIsDeleteModalOpen(true);
     }
 
@@ -45,9 +48,7 @@ export default function CompanyRoleManagement() {
             position: "top-center",
         })
 
-        const roles = replacePermissionIdsByObjects();
-
-        createRole.mutate(roles, {
+        createRole.mutate(newItem, {
             onSuccess: () => {
                 toast.dismiss();
                 toast.success("Role added", { position: "top-center" })
@@ -66,7 +67,11 @@ export default function CompanyRoleManagement() {
                 });
             }
         })
+    }
 
+    const handleSubmitEdit = () => {
+        toast.dismiss();
+        toast.loading("Updating role...", { position: "top-center" })
     }
 
     const confirmDelete = () => {
@@ -102,19 +107,15 @@ export default function CompanyRoleManagement() {
         }
     }
 
-    const replacePermissionIdsByObjects = () => {
-        const permissionObjects = newItem?.permissionIds?.map(permId =>
-            permissionData.find(p => p.id === permId)
-        ).filter(Boolean) || [];
-
-        const roles = {
-            ...newItem,
-            permissions: permissionObjects
+    const replacePermissionObjectsByIds = (item) => {
+        const permissionIds = item?.permissions?.map(perm => perm.id) || [];
+        return {
+            ...item,
+            permissionIds: permissionIds
         };
-        return roles;
     }
 
-    if (isLoading || !user) {
+    if (companyRolesLoading || permissionIsLoading || !user) {
         return <div>Loading...</div>
     }
 
@@ -122,7 +123,7 @@ export default function CompanyRoleManagement() {
         <>
             <DataTable
                 columns={columnsCompanyRole(handleEdit, handleDelete)}
-                data={data || []}
+                data={companyRolesData || []}
                 filterColumn="name"
                 showSelected={false}
                 onAdd={handleAdd}
@@ -135,6 +136,16 @@ export default function CompanyRoleManagement() {
                 onSave={handleSubmitSave}
                 newItem={newItem}
                 setNewItem={setNewItem}
+                permissions={permissionData}
+                companyId={companyId}
+            />
+
+            <EditCompanyRoleModal
+                open={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                onSave={handleSubmitEdit}
+                editItem={editItem}
+                setEditItem={setEditItem}
                 permissions={permissionData}
                 companyId={companyId}
             />

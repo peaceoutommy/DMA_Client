@@ -20,7 +20,10 @@ import {
 export function EditPermissionModal({ open, onClose, onSave, editItem, setEditItem, types }) {
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent
+                className="sm:max-w-[425px]"
+                onOpenAutoFocus={(e) => e.preventDefault()}
+            >
                 <DialogHeader>
                     <DialogTitle>Edit permission</DialogTitle>
                 </DialogHeader>

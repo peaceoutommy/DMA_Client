@@ -11,6 +11,7 @@ export default function Employee() {
     const companyId = user?.companyId;
 
     const { data: employeeData, isLoading: employeeIsLoading } = useCompanyEmployee(companyId);
+    console.log(employeeData)
 
     const handleAdd = () => {
         console.log('add');
