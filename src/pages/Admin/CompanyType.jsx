@@ -5,6 +5,7 @@ import { DeleteModal } from '@/components/Modal/DeleteModal';
 import { columnsCompanyType } from '@/components/Table/ColumnsCompanyType';
 import { AddCompanyTypeModal } from '@/components/Modal/AddCompanyTypeModal';
 import { EditCompanyTypeModal } from '@/components/Modal/EditCompanyTypeModal';
+import { toast } from "sonner"
 
 export default function CompanyType() {
     const { data, isLoading } = useCompanyTypes();
