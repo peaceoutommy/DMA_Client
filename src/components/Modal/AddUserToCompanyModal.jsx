@@ -102,9 +102,6 @@ export default function AddEmployeeModal({
                 {/* Header */}
                 <DialogHeader>
                     <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 ring-1 ring-primary/10">
-                            <UserPlus className="h-6 w-6 text-primary" />
-                        </div>
                         <div className="flex-1 space-y-1">
                             <DialogTitle className="text-2xl font-semibold tracking-tight">
                                 Add Employee
