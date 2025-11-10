@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from "@/context/AuthContext"
-import { useCompanyRoles, useCreateCompanyRole, useDeleteCompanyRole } from '@/hooks/useCompanyRole';
+import { useCompanyRoles, useCreateCompanyRole, useDeleteCompanyRole, useUpdateCompanyRole } from '@/hooks/useCompanyRole';
 import { useCompanyRolePermissions } from '@/hooks/useCompanyRolePermission';
 import { AddCompanyRoleModal } from '@/components/Modal/AddCompanyRoleModal';
 import { columnsCompanyRole } from '@/components/Table/ColumnsCompanyRole';
@@ -13,9 +13,11 @@ export default function CompanyRoleManagement() {
     const { user } = useAuth();
     const companyId = user?.companyId;
 
-    const { data:companyRolesData, isLoading:companyRolesLoading } = useCompanyRoles(companyId);
+    const { data: companyRolesData, isLoading: companyRolesLoading } = useCompanyRoles(companyId);
     const createRole = useCreateCompanyRole();
     const deleteRole = useDeleteCompanyRole();
+    const updateRole = useUpdateCompanyRole();
+
     const { data: permissionData, isLoading: permissionIsLoading } = useCompanyRolePermissions();
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -72,6 +74,27 @@ export default function CompanyRoleManagement() {
     const handleSubmitEdit = () => {
         toast.dismiss();
         toast.loading("Updating role...", { position: "top-center" })
+        if (editItem) {
+            updateRole.mutate(editItem, {
+                onSuccess: () => {
+                    toast.dismiss();
+                    toast.success("Role updated", { position: "top-center" })
+                    setIsEditModalOpen(false);
+                    setEditItem(null);
+                },
+                onError: (error) => {
+                    const errorMessage = error.response?.data?.message ||
+                        error.message ||
+                        "Failed to update role";
+
+                    toast.dismiss();
+                    toast.error("Failed to update role", {
+                        position: "top-center",
+                        description: errorMessage,
+                    });
+                }
+            })
+        }
     }
 
     const confirmDelete = () => {
@@ -110,7 +133,9 @@ export default function CompanyRoleManagement() {
     const replacePermissionObjectsByIds = (item) => {
         const permissionIds = item?.permissions?.map(perm => perm.id) || [];
         return {
-            ...item,
+            id: item.id,
+            name: item.name,
+            companyId: item.companyId,
             permissionIds: permissionIds
         };
     }

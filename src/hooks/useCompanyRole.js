@@ -27,6 +27,17 @@ export const useCreateCompanyRole = () => {
         },
     });
 };
+export const useUpdateCompanyRole = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (role) => companyRoleService.update(role),
+        onSuccess: (data, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: companyRoleKeys.list({ companyId: variables.companyId })
+            })
+        }
+    })
+};
 export const useDeleteCompanyRole = () => {
     const queryClient = useQueryClient();
     return useMutation({

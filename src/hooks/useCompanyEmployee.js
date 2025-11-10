@@ -14,3 +14,14 @@ export const useCompanyEmployee = (companyId) => {
         enabled: !!companyId
     })
 }
+export const useAddEmployee = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (membership) => companyEmployeeService.addEmployee(membership),
+        onSuccess: (data, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: companyEmployeeKeys.list({ companyId: variables.companyId })
+            });
+        }
+    })
+}
