@@ -22,6 +22,7 @@ export function AppSidebar() {
     const { open } = useSidebar()
     const { user } = useAuth()
     const location = useLocation()
+    
     // Memoize items to prevent recreation on every render
     const items = useMemo(() => {
         return filterVisibleItems(getMenuItems(user))
