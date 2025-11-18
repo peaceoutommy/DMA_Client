@@ -22,7 +22,7 @@ export function DeleteModal({ item, onClose, onDelete, open }) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction className="bg-red-600" onClick={onDelete}>Delete</AlertDialogAction>
+                    <AlertDialogAction className="bg-red-600 hover:bg-red-700 dark:text-foreground" onClick={onDelete}>Delete</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

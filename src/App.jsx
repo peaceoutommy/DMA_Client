@@ -20,6 +20,7 @@ import CompanyType from "./pages/Admin/CompanyType";
 import PermissionManagement from "./pages/Admin/PermissionManagement";
 import AppNavbar from "./components/AppNavbar/AppNavbar";
 import TermsOfService from "./pages/TermsOfService";
+import CampaignView from "./pages/Campaign/CampaignView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,6 +52,7 @@ export default function App() {
                       <Route path="/" element={<Home />} />
                       <Route path="/authenticate" element={<Authenticate />} />
                       <Route path="/campaigns" element={<CampaignList />} />
+                      <Route path="/campaigns/:id" element={<CampaignView />} />
                       <Route path="/campaigns/create" element={<CampaignCreate />} />
                       <Route path="/companies" element={<CompanyList />} />
                       <Route path="/companies/create" element={<CompanyCreate />} />

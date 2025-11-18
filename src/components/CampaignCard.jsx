@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Calendar, Building2, TrendingUp, MoreVertical } from 'lucide-react';
 import {
   Card,
@@ -17,6 +18,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { formatCurrency } from '@/utils/currency';
+import { formatDate } from '@/utils/date';
 
 export default function CampaignCard({ campaign }) {
   const {
@@ -32,27 +35,10 @@ export default function CampaignCard({ campaign }) {
     company
   } = campaign;
 
+  const navigate = useNavigate();
+
   // Calculate funding percentage
   const fundingPercentage = Math.min((raisedFunds / fundGoal) * 100, 100);
-
-  // Format currency
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  // Format date
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
 
   // Status badge variant
   const getStatusVariant = (status) => {
@@ -74,7 +60,7 @@ export default function CampaignCard({ campaign }) {
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       {/* Campaign Image */}
       {images.length > 0 && (
-        <div className="relative h-48 w-full overflow-hidden bg-muted">
+        <div className="relative h-48 bg-muted">
           <img
             src={images[0]}
             alt={name}
@@ -83,16 +69,12 @@ export default function CampaignCard({ campaign }) {
           <div className="absolute top-3 right-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="h-8 w-8 bg-white/90 hover:bg-white"
-                >
-                  <MoreVertical className="h-4 w-4" />
+                <Button variant="secondary" size="icon">
+                  <MoreVertical />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>View Details</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate(`/campaigns/${campaign.id}`)}>View Details</DropdownMenuItem>
                 <DropdownMenuItem>Edit Campaign</DropdownMenuItem>
                 <DropdownMenuItem className="text-destructive">
                   Delete Campaign
@@ -154,7 +136,7 @@ export default function CampaignCard({ campaign }) {
       </CardContent>
 
       <CardFooter className="pt-4 border-t">
-        <Button variant="outline" className="w-full">
+        <Button onClick={() => navigate(`/campaigns/${campaign.id}`)} variant="outline" className="w-full">
           View Campaign
         </Button>
       </CardFooter>

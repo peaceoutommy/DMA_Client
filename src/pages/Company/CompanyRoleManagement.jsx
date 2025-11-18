@@ -58,7 +58,7 @@ export default function CompanyRoleManagement() {
                 setNewItem(null);
             },
             onError: () => {
-                toast.dismiss;
+                toast.dismiss();
                 const errorMessage = error.response?.data?.message ||
                     error.message ||
                     "Failed to add role";
