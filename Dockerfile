@@ -12,7 +12,7 @@ WORKDIR /app
 RUN npm install -g serve
 
 # Copy built files from builder
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /dist ./dist
 
 EXPOSE 3000
 
