@@ -42,5 +42,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=peaceoutommy/dma-frontend:buildcache
-          cache-to: type=registry,ref=peaceoutommy/dma-frontend:buildcache,mode=max
+          cache-from: type=registry,ref=peaceoutommy/dma-client:buildcache
+          cache-to: type=registry,ref=peaceoutommy/dma-client:buildcache,mode=max
