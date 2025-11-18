@@ -4,190 +4,290 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { XCircle, Loader2, Target, CheckCircle } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Loader2, Target, Calendar as CalendarIcon, Building2, Upload, X } from 'lucide-react';
 import { useCreateCampaign } from '@/hooks/useCampaign';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { useCompany } from '@/hooks/useCompany';
+import { useNavigate } from 'react-router-dom';
+import { formatCurrency } from '@/utils/currency';
 
 export default function CampaignCreate() {
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
     const createCampaign = useCreateCampaign();
+    const [newItem, setnewItem] = useState(null);
+    const [images, setImages] = useState([]);
 
-    const [campaignData, setCampaignData] = useState({
-        name: '',
-        description: '',
-        companyId: 1,
-        fundGoal: ''
-    });
-
-    const [errors, setErrors] = useState({});
-
-    const formatCurrency = (value) => {
-        const number = value.replace(/[^0-9]/g, '');
-        if (!number) return '';
-        return new Intl.NumberFormat('nl-NL', {
-            style: 'currency',
-            currency: 'EUR',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        }).format(number);
+    const handleImageUpload = (e) => {
+        const files = Array.from(e.target.files);
+        const newImages = files.map(file => ({
+            file,
+            preview: URL.createObjectURL(file)
+        }));
+        setImages(prev => [...prev, ...newImages].slice(0, 5)); // Max 5 images
     };
 
-    const validateForm = () => {
-        const newErrors = {};
-
-        if (!campaignData.name.trim()) {
-            newErrors.name = 'Campaign name is required';
-        } else if (campaignData.name.trim().length < 3) {
-            newErrors.name = 'Campaign name must be at least 3 characters';
-        }
-
-        if (!campaignData.description.trim()) {
-            newErrors.description = 'Description is required';
-        } else if (campaignData.description.trim().length < 20) {
-            newErrors.description = 'Description must be at least 20 characters';
-        }
-
-        const goalAmount = parseInt(campaignData.fundGoal.replace(/[^0-9]/g, ''));
-        if (!campaignData.fundGoal || isNaN(goalAmount)) {
-            newErrors.fundGoal = 'Funding goal is required';
-        } else if (goalAmount < 100) {
-            newErrors.fundGoal = 'Funding goal must be at least $100';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+    const removeImage = (index) => {
+        setImages(prev => prev.filter((_, i) => i !== index));
     };
+
 
     const handleSubmit = () => {
-        if (validateForm()) {
-            const payload = {
-                name: campaignData.name.trim(),
-                description: campaignData.description.trim(),
-                fundGoal: parseFloat(campaignData.fundGoal.replace(/[^0-9]/g, '')),
-                companyId: campaignData.companyId
-            };
+        toast.loading("Creating campaign...", { id: "loadingToast", position: "top-center" });
 
-            createCampaign.mutate(payload, {
-                onSuccess: () => {
-                    setCampaignData({
-                        name: '',
-                        description: '',
-                        companyId: 1,
-                        fundGoal: ''
-                    });
-                    setErrors({});
+        const formData = new FormData();
+        formData.append('name', newItem.name.trim());
+        formData.append('description', newItem.description.trim());
+        formData.append('fundGoal', parseFloat(newItem.fundGoal.replace(/[^0-9]/g, '')));
+        formData.append('companyId', user.companyId);
 
-                    setTimeout(() => {
-                        createCampaign.reset();
-                    }, 3000);
-                },
-            });
+        if (newItem.startDate) {
+            formData.append('startDate', format(newItem.startDate, 'yyyy-MM-dd'));
         }
+        if (newItem.endDate) {
+            formData.append('endDate', format(newItem.endDate, 'yyyy-MM-dd'));
+        }
+
+        images.forEach((image, index) => {
+            formData.append('images', image.file);
+        });
+
+
+        createCampaign.mutate(formData, {
+            onSuccess: () => {
+                setnewItem(null);
+                setImages([]);
+                toast.success("Campaign created successfully!", { id: "loadingToast", position: "top-center" });
+            },
+            onError: () => {
+                toast.error("Failed to create campaign", { id: "loadingToast", position: "top-center" });
+            }
+        });
     };
 
     return (
-        <Card className="w-full max-w-md shadow-2xl border-0">
-            <CardContent className="pb-4">
-                <div className="space-y-3">
+        <div className="space-y-6">
+            {/* Header */}
+            <div>
+                <h1 className="text-3xl font-bold tracking-tight">Create New Campaign</h1>
+                <p className="text-muted-foreground mt-1">
+                    Set up a new fundraising campaign for your organization
+                </p>
+            </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="campaign-name">Campaign Name *</Label>
-                        <Input
-                            id="campaign-name"
-                            placeholder="Campaign name"
-                            value={campaignData.name}
-                            onChange={(e) => {
-                                setCampaignData({ ...campaignData, name: e.target.value });
-                                setErrors({ ...errors, name: '' });
-                            }}
-                            className={errors.name ? 'border-red-500' : ''}
-                        />
-                        {errors.name && (
-                            <p className="text-sm text-red-500">{errors.name}</p>
-                        )}
-                    </div>
+            <div className="gap-6">
+                {/* Main Form */}
+                <div className="space-y-6">
+                    {/* Basic Information */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Basic Information</CardTitle>
+                            <CardDescription>
+                                Provide the essential details about your campaign
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="campaign-name">Campaign Name *</Label>
+                                <Input
+                                    id="campaign-name"
+                                    placeholder="e.g., Clean Water Initiative"
+                                    value={newItem?.name || ''}
+                                    onChange={(e) => {
+                                        setnewItem({ ...newItem, name: e.target.value });
+                                    }}
+                                />
+                            </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="campaign-description">Description *</Label>
-                        <Textarea
-                            id="campaign-description"
-                            placeholder="Campaign description..."
-                            value={campaignData.description}
-                            onChange={(e) => {
-                                setCampaignData({ ...campaignData, description: e.target.value });
-                                setErrors({ ...errors, description: '' });
-                            }}
-                            className={`min-h-[120px] resize-none ${errors.description ? 'border-red-500' : ''}`}
-                        />
-                        <div className="flex justify-between items-center">
-                            {errors.description ? (
-                                <p className="text-sm text-red-500">{errors.description}</p>
-                            ) : (
-                                <p className="text-xs text-muted-foreground">
-                                    {campaignData.description.length} characters
-                                </p>
-                            )}
+                            <div className="space-y-2">
+                                <Label htmlFor="campaign-description">Description *</Label>
+                                <Textarea
+                                    id="campaign-description"
+                                    placeholder="Describe your campaign goals, impact, and why people should support it..."
+                                    value={newItem?.description || ''}
+                                    onChange={(e) => {
+                                        setnewItem({ ...newItem, description: e.target.value });
+                                    }}
+                                />
+                                <div className="flex justify-between items-center">
+                                    <p className="text-xs text-muted-foreground">
+                                        {newItem?.description?.length} characters (minimum 20)
+                                    </p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Funding & Timeline */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Funding & Timeline</CardTitle>
+                            <CardDescription>
+                                Set your fundraising goal and campaign duration
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="campaign-goal" className="flex items-center gap-2">
+                                    <Target className="h-4 w-4" />
+                                    Funding Goal *
+                                </Label>
+                                <Input
+                                    id="campaign-goal"
+                                    placeholder="€10,000"
+                                    value={newItem?.fundGoal || ''}
+                                    onChange={(e) => {
+                                        const formatted = formatCurrency(e.target.value);
+                                        setnewItem({ ...newItem, fundGoal: formatted });
+                                    }}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label>Start Date</Label>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal",
+                                                    !newItem?.startDate && "text-muted-foreground",
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {newItem?.startDate ? format(newItem?.startDate, "PPP") : "Pick a date"}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={newItem?.startDate}
+                                                onSelect={(date) => {
+                                                    setnewItem({ ...newItem, startDate: date });
+                                                }}
+                                                disabled={(date) => date < new Date()}
+                                                initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label>End Date</Label>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal",
+                                                    !newItem?.endDate && "text-muted-foreground",
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {newItem?.endDate ? format(newItem?.endDate, "PPP") : "Pick a date"}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={newItem?.endDate}
+                                                onSelect={(date) => {
+                                                    setnewItem({ ...newItem, endDate: date });
+                                                }}
+                                                disabled={(date) => date < (newItem?.startDate || new Date())}
+                                                initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Images */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Campaign Images</CardTitle>
+                            <CardDescription>
+                                Upload images to showcase your campaign (optional, max 5)
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    {images.map((image, index) => (
+                                        <div key={index} className="relative aspect-video rounded-lg overflow-hidden border">
+                                            <img
+                                                src={image.preview}
+                                                alt={`Upload ${index + 1}`}
+                                                className="object-cover w-full h-full"
+                                            />
+                                            <Button
+                                                size="icon"
+                                                variant="destructive"
+                                                className="absolute top-2 right-2 h-6 w-6"
+                                                onClick={() => removeImage(index)}
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    ))}
+
+                                    {images.length < 5 && (
+                                        <label className="aspect-video rounded-lg border-2 border-dashed border-muted-foreground/25 hover:border-muted-foreground/50 transition-colors cursor-pointer flex flex-col items-center justify-center gap-2">
+                                            <Upload className="h-8 w-8 text-muted-foreground" />
+                                            <span className="text-sm text-muted-foreground">Upload Image</span>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                multiple
+                                                className="hidden"
+                                                onChange={handleImageUpload}
+                                            />
+                                        </label>
+                                    )}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+
+                    <div>
+                        {/* Action Buttons */}
+                        <div className='flex  gap-2 justify-end'>
+                            <Button variant="outline" onClick={() => window.history.back()}>
+                                Cancel
+                            </Button>
+
+                            <Button onClick={handleSubmit} disabled={createCampaign.isPending}>
+                                {createCampaign.isPending ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Creating...
+                                    </>
+                                ) : (
+                                    'Create Campaign'
+                                )}
+                            </Button>
                         </div>
-                    </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="campaign-goal">Funding Goal *</Label>
-                        <Input
-                            id="campaign-goal"
-                            placeholder="€10,000"
-                            value={campaignData.fundGoal}
-                            onChange={(e) => {
-                                const formatted = formatCurrency(e.target.value);
-                                setCampaignData({ ...campaignData, fundGoal: formatted });
-                                setErrors({ ...errors, fundGoal: '' });
-                            }}
-                            className={errors.fundGoal ? 'border-red-500' : ''}
-                        />
-                        {errors.fundGoal && (
-                            <p className="text-sm text-red-500">{errors.fundGoal}</p>
-                        )}
-                        {!errors.fundGoal && campaignData.fundGoal && (
-                            <p className="text-xs text-muted-foreground">
-                                Target amount you want to raise
-                            </p>
-                        )}
-                    </div>
+                        {/* Guidelines */}
 
-                    <div className="space-y-2">
-                        <Label htmlFor="campaign-company">Company</Label>
-                        <Input
-                            id="campaign-company"
-                            value={campaignData.companyId}
-                            disabled
-                            className="bg-muted"
-                        />
-                        <p className="text-xs text-muted-foreground">
-                            Company is automatically assigned
+                        <p className="text-xs text-muted-foreground text-center pt-4">
+                            By creating a campaign, you agree to our{' '}
+                            <button onClick={() => navigate("/tos")} className="text-primary hover:underline cursor-pointer">Terms of Service</button>
                         </p>
+
                     </div>
-
-                    <Button
-                        onClick={handleSubmit}
-                        className="w-full mt-2"
-                        disabled={createCampaign.isPending}
-                    >
-                        {createCampaign.isPending ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Creating campaign...
-                            </>
-                        ) : (
-                            'Create Campaign'
-                        )}
-                    </Button>
                 </div>
-
-                <div className="mt-4 text-center text-xs text-gray-600">
-                    By creating a campaign, you agree to our{' '}
-                    <button className="text-blue-600 hover:underline">Campaign Guidelines</button>
-                    {' '}and{' '}
-                    <button className="text-blue-600 hover:underline">Terms of Service</button>
-                </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }

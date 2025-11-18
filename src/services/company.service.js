@@ -25,5 +25,13 @@ export const companyService = {
     async createType(typeData) {
         const data = await api.post('/companies/types', typeData);
         return data;
+    },
+    async updateType(typeData) {
+        const data = await api.put('/companies/types', typeData);
+        return data;
+    },
+    async deleteType(id) {
+        const data = await api.delete(`/companies/types/${id}`);
+        return data;
     }
 }

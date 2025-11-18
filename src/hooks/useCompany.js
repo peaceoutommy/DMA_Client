@@ -14,7 +14,7 @@ export const companyKeys = {
 export const useCompanies = () => {
     return useQuery({
         queryKey: companyKeys.all,
-        queryFn: () => companyService.getAll().then(res => res.data),
+        queryFn: () => companyService.getAll().then(res => res.data.companies),
     });
 }
 
@@ -34,9 +34,39 @@ export const useCreateCompany = () => {
     });
 };
 
-export const useCompanyTypes = () =>{
+export const useCompanyTypes = () => {
     return useQuery({
         queryKey: companyKeys.types(),
         queryFn: () => companyService.getAllTypes().then(res => res.data.types),
     });
 }
+
+export const useCreateCompanyType = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data) => companyService.createType(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries(companyKeys.types());
+        },
+    });
+};
+
+export const useUpdateCompanyType = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data) => companyService.updateType(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries(companyKeys.types());
+        },
+    });
+};
+
+export const useDeleteCompanyType = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id) => companyService.deleteType(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries(companyKeys.types());
+        },
+    });
+};
