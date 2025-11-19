@@ -222,7 +222,7 @@ export default function CampaignView() {
                                 </div>
                             </div>
 
-                            <Button onClick={() => setIsDonateOpen(true)} className="w-full" size="lg">
+                            <Button onClick={user ? () => setIsDonateOpen(true) : () => navigate('/authenticate')} className="w-full" size="lg">
                                 <EuroIcon className="h-4 w-4 mr-2" />
                                 Donate Now
                             </Button>

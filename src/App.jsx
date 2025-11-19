@@ -21,6 +21,7 @@ import PermissionManagement from "./pages/Admin/PermissionManagement";
 import AppNavbar from "./components/AppNavbar/AppNavbar";
 import TermsOfService from "./pages/TermsOfService";
 import CampaignView from "./pages/Campaign/CampaignView";
+import Footer from "./components/AppFooter/AppFooter"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,9 +45,9 @@ export default function App() {
           <Router>
             <SidebarProvider>
               <AppSidebar />
-              <main className="w-full">
+              <main className="flex flex-col w-full min-h-screen">
                 <AppNavbar />
-                <div className="p-4 md:p-8 lg:p-12">
+                <div className="p-4 md:p-8 lg:p-12 bg-gradient-to-br from-primary/10 via-background to-background flex-grow">
                   <div className="max-w-7xl mx-auto">
                     <Routes>
                       <Route path="/" element={<Home />} />
@@ -64,6 +65,7 @@ export default function App() {
                     </Routes>
                   </div>
                 </div>
+                <Footer />
               </main>
               <Toaster />
             </SidebarProvider>

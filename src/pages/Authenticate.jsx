@@ -131,6 +131,7 @@ export default function Authenticate() {
                                 type="text"
                                 placeholder="yourusername"
                                 value={loginData.email}
+                                data-test="usernameOrEmail"
                                 onChange={(e) => {
                                     setLoginData({ ...loginData, email: e.target.value });
                                     setErrors({ ...errors, email: '' });
@@ -148,6 +149,7 @@ export default function Authenticate() {
                                 id="login-password"
                                 type="password"
                                 placeholder="•••••••••••"
+                                data-test="loginPassword"
                                 value={loginData.password}
                                 onChange={(e) => {
                                     setLoginData({ ...loginData, password: e.target.value });

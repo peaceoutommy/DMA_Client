@@ -59,7 +59,7 @@ export default function CampaignList() {
             <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="ACTIVE">Active</SelectItem>
             <SelectItem value="COMPLETED">Completed</SelectItem>
-            {user.role === "ADMIN" && (
+            {user?.role === "ADMIN" && (
               <>
                 <SelectItem value="PENDING">Pending</SelectItem>
                 <SelectItem value="ARCHIVED">Archived</SelectItem>
@@ -68,13 +68,13 @@ export default function CampaignList() {
           </SelectContent>
         </Select>
 
-        <Button
+        {user?.role === "COMPANY_ACCOUNT" && <Button
           className="sm:w-auto"
           onClick={() => navigate("/campaigns/create")}
         >
           <Plus className="h-4 w-4 mr-2" />
           Create Campaign
-        </Button>
+        </Button>}
       </div>
 
       {/* Campaign Grid */}
