@@ -115,7 +115,7 @@ describe('Login Form', () => {
     it('should show loading state during login', () => {
       cy.intercept('POST', '**/login', (req) => {
         req.reply((res) => {
-          res.delay = 1000; // Delay to see loading state
+          res.delay = 4000; // Delay to see loading state
           res.send({ statusCode: 200, body: { token: 'fake-jwt-token' } });
         });
       }).as('loginRequest');
