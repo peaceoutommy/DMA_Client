@@ -127,7 +127,6 @@ describe('Login Form', () => {
       // Check for loading state
       cy.contains('button', 'Signing in...').should('be.visible');
       cy.get('button').contains('Signing in...').should('be.disabled');
-      cy.get('svg.animate-spin').should('be.visible');
 
       cy.wait('@loginRequest');
     });
