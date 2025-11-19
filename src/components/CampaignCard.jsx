@@ -136,7 +136,7 @@ export default function CampaignCard({ campaign }) {
       </CardContent>
 
       <CardFooter className="pt-4 border-t">
-        <Button onClick={() => navigate(`/campaigns/${campaign.id}`)} variant="outline" className="w-full">
+        <Button onClick={() => navigate(`/campaigns/${campaign.id}`)} variant="default" className="w-full">
           View Campaign
         </Button>
       </CardFooter>
