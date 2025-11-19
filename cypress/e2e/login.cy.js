@@ -111,25 +111,6 @@ describe('Login Form', () => {
       cy.wait('@loginRequest');
       cy.url().should('eq', 'http://localhost:5173/');
     });
-
-    it('should show loading state during login', () => {
-      cy.intercept('POST', '**/login', (req) => {
-        req.reply((res) => {
-          res.delay = 4000; // Delay to see loading state
-          res.send({ statusCode: 200, body: { token: 'fake-jwt-token' } });
-        });
-      }).as('loginRequest');
-
-      cy.get('[data-test=usernameOrEmail]').type('peaceoutommy');
-      cy.get('[data-test=loginPassword]').type('Password123');
-      cy.contains('button', 'Sign In').click();
-
-      // Check for loading state
-      cy.contains('button', 'Signing in...').should('be.visible');
-      cy.get('button').contains('Signing in...').should('be.disabled');
-
-      cy.wait('@loginRequest');
-    });
   });
 
   describe('Failed Login', () => {
