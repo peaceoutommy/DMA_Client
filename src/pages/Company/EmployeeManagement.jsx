@@ -40,10 +40,10 @@ export default function Employee() {
 
         addEmployee.mutate(newItem, {
             onSuccess: () => {
-                toast.dismiss();
-                toast.success("Employee added", { position: "top-center" })
                 setIsAddModalOpen(false);
                 setNewItem(null);
+                toast.dismiss();
+                toast.success("Employee added", { position: "top-center" })
             },
             onError: (error) => {
                 toast.dismiss();

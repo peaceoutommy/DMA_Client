@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,20 +26,36 @@ export default function CampaignCreate() {
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
-        const newImages = files.map(file => ({
+
+        const availableSlots = 5 - images.length;
+        const filesToAdd = files.slice(0, availableSlots);
+
+        const newImages = filesToAdd.map(file => ({
             file,
             preview: URL.createObjectURL(file)
         }));
-        setImages(prev => [...prev, ...newImages].slice(0, 5)); // Max 5 images
+
+        setImages(prev => [...prev, ...newImages]);
+        e.target.value = '';
     };
 
     const removeImage = (index) => {
+        // Revoke the object URL to free memory
+        URL.revokeObjectURL(images[index].preview);
         setImages(prev => prev.filter((_, i) => i !== index));
     };
 
+    // Add cleanup on component unmount or successful submission
+    useEffect(() => {
+        return () => {
+            images.forEach(image => URL.revokeObjectURL(image.preview));
+        };
+    }, [images]);
+
 
     const handleSubmit = () => {
-        toast.loading("Creating campaign...", { id: "loadingToast", position: "top-center" });
+        toast.dismiss();
+        toast.loading("Creating campaign...", { position: "top-center" });
 
         const formData = new FormData();
         formData.append('name', newItem.name.trim());
@@ -58,15 +74,17 @@ export default function CampaignCreate() {
             formData.append('images', image.file);
         });
 
-
         createCampaign.mutate(formData, {
-            onSuccess: () => {
+            onSuccess: (data) => {
                 setnewItem(null);
                 setImages([]);
-                toast.success("Campaign created successfully!", { id: "loadingToast", position: "top-center" });
+                toast.dismiss();
+                toast.success("Campaign created successfully!", { position: "top-center" });
+                navigate(`/campaigns/${data.id}`)
             },
             onError: () => {
-                toast.error("Failed to create campaign", { id: "loadingToast", position: "top-center" });
+                toast.dismiss();
+                toast.error("Failed to create campaign", { position: "top-center" });
             }
         });
     };

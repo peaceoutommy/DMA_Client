@@ -9,7 +9,7 @@ export default function AppNavbar() {
     const isMobile = useIsMobile();
 
     return (
-        <nav className="w-full bg-sidebar border-b z-1000 sticky top-0">
+        <nav className="w-full bg-sidebar border-b z-10 sticky top-0">
             <div className="flex items-center justify-end h-12 px-6">
 
                 {/* Right side icons */}

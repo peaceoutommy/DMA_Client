@@ -11,7 +11,7 @@ export const campaignKeys = {
 export const useCampaigns = () => {
     return useQuery({
         queryKey: campaignKeys.all,
-        queryFn: () => campaignService.getAll().then(res => res.data.campaigns),
+        queryFn: () => campaignService.getAll().then(res => res.data.campaigns)
     });
 }
 

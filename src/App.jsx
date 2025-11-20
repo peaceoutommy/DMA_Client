@@ -47,7 +47,7 @@ export default function App() {
               <AppSidebar />
               <main className="flex flex-col w-full min-h-screen">
                 <AppNavbar />
-                <div className="p-4 md:p-8 lg:p-12 bg-gradient-to-br from-primary/10 via-background to-background flex-grow">
+                <div className="p-4 md:p-8 lg:p-12 flex-grow">
                   <div className="max-w-7xl mx-auto">
                     <Routes>
                       <Route path="/" element={<Home />} />

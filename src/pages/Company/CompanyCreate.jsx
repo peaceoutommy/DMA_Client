@@ -52,6 +52,10 @@ export default function CompanyCreate() {
     };
 
     const handleSubmit = () => {
+        toast.dismiss();
+        toast.loading("Creating company...", {
+            position: "top-center",
+        })
         if (validateForm()) {
             const payload = {
                 userId: user.id,
@@ -71,12 +75,25 @@ export default function CompanyCreate() {
                         taxId: ''
                     });
                     setErrors({});
+                    toast.dismiss();
+                    toast.success("Company created successfully", { position: "top-center" })
                 },
+                onError: (error) => {
+                    toast.dismiss();
+                    const errorMessage = error.response?.data?.message ||
+                        error.message ||
+                        "Failed to create company";
+
+                    toast.error("Failed to create company", {
+                        position: "top-center",
+                        description: errorMessage,
+                    });
+                }
             });
         }
     };
 
-    if(!user){
+    if (!user) {
         return <div>Loading...</div>
     }
 

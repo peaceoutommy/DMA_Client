@@ -2,7 +2,7 @@ import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { Button } from './ui/button';
 import { toast } from 'sonner';
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ campaignId, onPayment }) {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -20,16 +20,16 @@ export default function CheckoutForm() {
         if (error) {
             console.error(error.message);
         } else if (paymentIntent.status === 'succeeded') {
-            console.log(paymentIntent);
-            toast.dismiss();
-            toast.success('Donation was successfull, thank you!', { position: 'top-center' })
+            await onPayment();
         }
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <PaymentElement className='bg-background' />
-            {stripe && <Button variant="outline" className="mt-2 w-full" disabled={!stripe}>Pay</Button>}
+            {stripe &&
+                <Button variant="outline" className="mt-2 w-full" disabled={!stripe}>Pay</Button>
+            }
         </form>
     );
 }
