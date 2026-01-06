@@ -12,19 +12,15 @@ import {
     CalendarDays
 } from 'lucide-react';
 
-// UI Components
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-
-// Your Custom Components & Hooks
 import CampaignCard from '@/components/CampaignCard';
 import { useCompanies } from '@/hooks/useCompany';
 import { useCampaigns } from '@/hooks/useCampaign';
-import { formatCurrency } from '@/utils/currency'; // Assuming you have this based on your Card code
+import { formatCurrency } from '@/utils/currency';
 
 export default function CompanyProfile() {
     const { id } = useParams();
@@ -59,7 +55,7 @@ export default function CompanyProfile() {
 
     // Loading State
     if (isLoadingCompany || isLoadingCampaigns) {
-        return <ProfileSkeleton />;
+        return <span>Loading...</span>
     }
 
     if (!company) {
@@ -210,29 +206,4 @@ export default function CompanyProfile() {
             </div>
         </div>
     );
-}
-
-// Simple Skeleton Loader for better UX
-function ProfileSkeleton() {
-    return (
-        <div className="space-y-6 container mx-auto py-6">
-            <Skeleton className="h-8 w-24" />
-            <div className="flex gap-6">
-                <Skeleton className="h-32 w-32 rounded-lg" />
-                <div className="space-y-2 flex-1">
-                    <Skeleton className="h-8 w-64" />
-                    <Skeleton className="h-4 w-48" />
-                    <Skeleton className="h-4 w-32" />
-                </div>
-            </div>
-            <Skeleton className="h-[1px] w-full" />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <Skeleton className="h-64 w-full" />
-                <div className="lg:col-span-2 grid grid-cols-2 gap-6">
-                    <Skeleton className="h-64 w-full" />
-                    <Skeleton className="h-64 w-full" />
-                </div>
-            </div>
-        </div>
-    )
 }
