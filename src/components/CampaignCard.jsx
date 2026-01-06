@@ -31,7 +31,7 @@ export default function CampaignCard({ campaign }) {
     status,
     fundGoal,
     raisedFunds,
-    images = [],
+    files = [],
     company
   } = campaign;
 
@@ -59,10 +59,10 @@ export default function CampaignCard({ campaign }) {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       {/* Campaign Image */}
-      {images.length > 0 && (
+      {files.length > 0 && (
         <div className="relative h-48 bg-muted">
           <img
-            src={images[0]}
+            src={files[0].url}
             alt={name}
             className="h-full w-full object-cover"
           />

@@ -22,6 +22,7 @@ export default function CampaignList() {
   const [statusFilter, setStatusFilter] = useState('all');
 
   const { data, isLoading, isError, error, isFetching } = useCampaigns();
+  console.log(data)
 
   const filteredCampaigns = useMemo(() => {
     if (!data) return [];

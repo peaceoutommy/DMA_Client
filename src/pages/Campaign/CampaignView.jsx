@@ -139,24 +139,23 @@ export default function CampaignView() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Content */}
                 <div className="lg:col-span-2 space-y-6">
-                    {/* Campaign Image */}
-                    {/* Campaign Images */}
-                    {campaign.images && campaign.images.length > 0 && (
+                    {/* Images Gallery */}
+                    {campaign.files && campaign.files.length > 0 && (
                         <Card className="overflow-hidden">
                             <div className="space-y-2 p-2">
                                 {/* Main Image */}
                                 <div className="relative w-full h-96 overflow-hidden rounded-lg">
                                     <img
-                                        src={campaign.images[selectedImageIndex || 0]}
+                                        src={campaign.files[selectedImageIndex || 0].url}
                                         alt={campaign.name}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
 
                                 {/* Thumbnails */}
-                                {campaign.images.length > 1 && (
+                                {campaign.files.length > 1 && (
                                     <div className="grid grid-cols-5 gap-2">
-                                        {campaign.images.map((image, index) => (
+                                        {campaign.files.map((file, index) => (
                                             <button
                                                 key={index}
                                                 onClick={() => setSelectedImageIndex(index)}
@@ -166,7 +165,7 @@ export default function CampaignView() {
                                                     }`}
                                             >
                                                 <img
-                                                    src={image}
+                                                    src={file.url}
                                                     alt={`Thumbnail ${index + 1}`}
                                                     className="w-full h-full object-cover"
                                                 />

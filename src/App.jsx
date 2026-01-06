@@ -5,6 +5,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "./context/ThemeContext";
 import { AppSidebar } from "@/components/AppSidebar/AppSidebar";
 import { Toaster } from "@/components/ui/sonner"
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
 import Authenticate from "./pages/Authenticate";
@@ -60,15 +61,33 @@ export default function App() {
                       <Route path="/not-approved" element={<NotApprovedYet />} />
                       <Route path="/campaigns" element={<CampaignList />} />
                       <Route path="/campaigns/:id" element={<CampaignView />} />
-                      <Route path="/campaigns/create" element={<CampaignCreate />} />
+
+                      <Route
+                        path="/campaigns/create"
+                        element={
+                          <ProtectedRoute requireCompanyActive>
+                            <CampaignCreate />
+                          </ProtectedRoute>
+                        }
+                      />
+
                       <Route path="/companies" element={<CompanyList />} />
-                      <Route path="/companies/create" element={<CompanyCreate />} />
+
+                      <Route
+                        path="/companies/create"
+                        element={
+                          <ProtectedRoute>
+                            <CompanyCreate />
+                          </ProtectedRoute>
+                        }
+                      />
+
                       <Route path="/companies/roles" element={<CompanyRoleManagement />} />
                       <Route path="/companies/employees" element={<Employee />} />
                       <Route path="/companies/permissions" element={<PermissionManagement />} />
                       <Route path="/companies/types" element={<CompanyType />} />
                       <Route path="/tos" element={<TermsOfService />} />
-                      <Route path="/tickets" element={<TicketList />} />
+                      <Route path="/tickets" element={<ProtectedRoute requireRole={"ADMIN"}><TicketList /></ProtectedRoute>} />
                       <Route path="/tickets/:id" element={<TicketView />} />
                     </Routes>
                   </div>

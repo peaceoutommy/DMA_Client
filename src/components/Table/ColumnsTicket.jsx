@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom"
 import { Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatDateTime } from "@/utils/date"
+import { Badge } from "../ui/badge"
 
 export const columnsTicket = [
   {
@@ -12,7 +13,7 @@ export const columnsTicket = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => <div className="font-medium">{row.original.status}</div>,
+    cell: ({ row }) => <Badge className="font-medium">{row.original.status}</Badge>,
   },
   {
     accessorKey: "message",
