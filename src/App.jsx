@@ -16,10 +16,12 @@ import CampaignCreate from "./pages/Campaign/CampaignCreate";
 
 import CompanyList from "./pages/Company/CompanyList";
 import CompanyCreate from "./pages/Company/CompanyCreate";
+import CompanyProfile from "./pages/Company/CompanyProfile";
+import CompanyType from "./pages/Admin/CompanyType";
 import CompanyRoleManagement from "./pages/Company/CompanyRoleManagement";
+
 import Employee from "./pages/Company/EmployeeManagement";
 
-import CompanyType from "./pages/Admin/CompanyType";
 import PermissionManagement from "./pages/Admin/PermissionManagement";
 import AppNavbar from "./components/AppNavbar/AppNavbar";
 import TermsOfService from "./pages/TermsOfService";
@@ -72,6 +74,7 @@ export default function App() {
                       />
 
                       <Route path="/companies" element={<CompanyList />} />
+                      <Route path="/companies/:id" element={<CompanyProfile />} />
 
                       <Route
                         path="/companies/create"

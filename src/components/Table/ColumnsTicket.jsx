@@ -47,19 +47,17 @@ export const columnsTicket = [
     header: "Actions",
     cell: ({ row }) => {
       const navigate = useNavigate()
-      const id = row.original.id // reliably get the ticket ID
+      const id = row.original.id
 
       return (
-        <div className="flex gap-1">
-          <Button
-            variant="ghost"
-            className="h-8 w-8 p-0 hover:text-blue-700"
-            onClick={() => navigate(`/tickets/${id}`)}
-          >
-            <Eye className="h-4 w-4" />
-            <span className="sr-only">View</span>
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          className="h-8 w-8 p-0 hover:text-blue-700"
+          onClick={() => navigate(`/tickets/${id}`)}
+        >
+          <Eye className="h-4 w-4" />
+          <span className="sr-only">View</span>
+        </Button>
       )
     },
   },

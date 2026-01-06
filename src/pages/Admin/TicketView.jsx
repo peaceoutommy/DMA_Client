@@ -14,6 +14,8 @@ export default function TicketView() {
     const { data, isLoading } = useTicket(id);
     const [processing, setProcessing] = useState(false);
 
+    console.log(data)
+
     const [ticketCloseDto, setTicketCloseDto] = useState({
         id: id,
         message: '',
@@ -24,7 +26,7 @@ export default function TicketView() {
 
     const getFileIcon = (fileType) => {
         switch (fileType) {
-            case 'IMAGE':
+            case 'IMAGE' || 'CAMPAIGN_IMAGE':
                 return <Image className="w-5 h-5" />;
             case 'VIDEO':
                 return <Video className="w-5 h-5" />;
@@ -136,7 +138,7 @@ export default function TicketView() {
                                         key={file.id}
                                         className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow"
                                     >
-                                        {file.fileType === 'IMAGE' ? (
+                                        {file.fileType === 'IMAGE' || file.fileType === 'CAMPAIGN_IMAGE' ? (
                                             <img
                                                 src={file.url}
                                                 alt={`Attachment ${file.id}`}
@@ -148,16 +150,8 @@ export default function TicketView() {
                                             </div>
                                         )}
                                         <div className="p-3 bg-white">
-                                            <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
                                                 <span className="text-sm text-gray-600">{file.fileType}</span>
-                                                <a
-                                                    href={file.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                                >
-                                                    View
-                                                </a>
                                             </div>
                                         </div>
                                     </div>

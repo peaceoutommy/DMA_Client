@@ -22,8 +22,9 @@ export const getMenuItems = (user) => {
             icon: Building2,
             visible: user,
             child: [
+                { title: "Profile", url: `/companies/${user?.companyId}`, icon: Building2, visible: hasCompany },
                 { title: "List", url: "/companies", icon: Building2, visible: true },
-                { title: "Create", url: "/companies/create", icon: Building2, visible: isCompanyAccount},
+                { title: "Create", url: "/companies/create", icon: Building2, visible: isCompanyAccount },
             ],
         },
         {
