@@ -8,6 +8,8 @@ import { Toaster } from "@/components/ui/sonner"
 
 import Home from "./pages/Home";
 import Authenticate from "./pages/Authenticate";
+import NotApprovedYet from "./pages/NotApprovedYet";
+
 import CampaignList from "./pages/Campaign/CampaignList";
 import CampaignCreate from "./pages/Campaign/CampaignCreate";
 
@@ -22,6 +24,9 @@ import AppNavbar from "./components/AppNavbar/AppNavbar";
 import TermsOfService from "./pages/TermsOfService";
 import CampaignView from "./pages/Campaign/CampaignView";
 import Footer from "./components/AppFooter/AppFooter"
+
+import TicketList from "./pages/Admin/TicketList";
+import TicketView from "./pages/Admin/TicketView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -52,6 +57,7 @@ export default function App() {
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/authenticate" element={<Authenticate />} />
+                      <Route path="/not-approved" element={<NotApprovedYet />} />
                       <Route path="/campaigns" element={<CampaignList />} />
                       <Route path="/campaigns/:id" element={<CampaignView />} />
                       <Route path="/campaigns/create" element={<CampaignCreate />} />
@@ -62,6 +68,8 @@ export default function App() {
                       <Route path="/companies/permissions" element={<PermissionManagement />} />
                       <Route path="/companies/types" element={<CompanyType />} />
                       <Route path="/tos" element={<TermsOfService />} />
+                      <Route path="/tickets" element={<TicketList />} />
+                      <Route path="/tickets/:id" element={<TicketView />} />
                     </Routes>
                   </div>
                 </div>

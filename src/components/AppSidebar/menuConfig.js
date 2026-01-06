@@ -42,6 +42,7 @@ export const getMenuItems = (user) => {
             child: [
                 { title: "Company Types", url: "/companies/types", icon: Building2, visible: isAdmin },
                 { title: "Permissions", url: "/companies/permissions", icon: Building2, visible: isAdmin },
+                { title: "Tickets", url: "/tickets", icon: Building2, visible: isAdmin },
             ],
         }
     ]
