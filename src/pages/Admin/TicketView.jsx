@@ -100,19 +100,13 @@ export default function TicketView() {
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div>
-                            <h3 className="font-semibold text-sm text-gray-700 mb-2">Message</h3>
-                            <div className="bg-gray-50 rounded-lg p-4 text-gray-700 text-sm leading-relaxed">
-                                {data.ticket.message}
-                            </div>
-                        </div>
-
                         <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                             <div className="flex items-center gap-2 text-sm">
                                 <Calendar className="w-4 h-4 text-gray-500" />
                                 <span className="font-medium text-gray-700">Created:</span>
                                 <span className="text-gray-600">{formatDate(data.ticket.createDate)}</span>
                             </div>
+
                             {data.ticket.closeDate && (
                                 <div className="flex items-center gap-2 text-sm">
                                     <Clock className="w-4 h-4 text-gray-500" />
@@ -120,6 +114,20 @@ export default function TicketView() {
                                     <span className="text-gray-600">{formatDate(data.ticket.closeDate)}</span>
                                 </div>
                             )}
+                        </div>
+
+                        <div>
+                            <h3 className="font-semibold text-sm text-gray-700 mb-2">Additional information:</h3>
+                            <div className="bg-gray-50 rounded-lg p-4 text-gray-700 text-sm leading-relaxed">
+                                {data.ticket.additionalInfo || <div className="text-gray-400 italic">No additional information provided.</div>}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 className="font-semibold text-sm text-gray-700 mb-2">Close message</h3>
+                            <div className="bg-gray-50 rounded-lg p-4 text-gray-700 text-sm leading-relaxed">
+                                {data.ticket.message}
+                            </div>
                         </div>
                     </CardContent>
                 </Card>

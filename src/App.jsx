@@ -21,6 +21,7 @@ import CompanyType from "./pages/Admin/CompanyType";
 import CompanyRoleManagement from "./pages/Company/CompanyRoleManagement";
 
 import Employee from "./pages/Company/EmployeeManagement";
+import UserProfile from "./pages/User/UserProfile";
 
 import PermissionManagement from "./pages/Admin/PermissionManagement";
 import AppNavbar from "./components/AppNavbar/AppNavbar";
@@ -30,6 +31,7 @@ import Footer from "./components/AppFooter/AppFooter"
 
 import TicketList from "./pages/Admin/TicketList";
 import TicketView from "./pages/Admin/TicketView";
+import FundRequest from "./pages/Campaign/FundRequest";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,6 +65,7 @@ export default function App() {
                       <Route path="/not-approved" element={<NotApprovedYet />} />
                       <Route path="/campaigns" element={<CampaignList />} />
                       <Route path="/campaigns/:id" element={<CampaignView />} />
+                      <Route path="/profile/:id" element={<UserProfile />} />
 
                       <Route
                         path="/campaigns/create"
@@ -84,6 +87,8 @@ export default function App() {
                           </ProtectedRoute>
                         }
                       />
+
+                      <Route path="/funding" element={<FundRequest />} />
 
                       <Route path="/companies/roles" element={<CompanyRoleManagement />} />
                       <Route path="/companies/employees" element={<Employee />} />

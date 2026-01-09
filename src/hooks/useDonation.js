@@ -8,8 +8,11 @@ export const donationKeys = {
     detail: (id) => [...campaignKeys.all, 'detail', id],
 }
 
-export const useDonations = (campaignId) => {
-
+export const useDonationsByUser = (userId) => {
+    return useQuery({
+        queryKey: donationKeys.list(userId),
+        queryFn: () => donationService.getDonationsByUser(userId),
+    });
 }
 
 export const useCreateDonation = (donation) => {
@@ -20,7 +23,7 @@ export const useCreateDonation = (donation) => {
     })
 }
 
-export const useSaveDonation = () =>{
+export const useSaveDonation = () => {
     const queryClient = useQueryClient();
-    
+
 }

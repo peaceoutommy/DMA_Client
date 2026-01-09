@@ -5,57 +5,46 @@ import {
     MapPin,
     Globe,
     Mail,
-    ArrowLeft,
-    CheckCircle2,
     TrendingUp,
     Files,
     CalendarDays
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CampaignCard from '@/components/CampaignCard';
-import { useCompanies } from '@/hooks/useCompany';
-import { useCampaigns } from '@/hooks/useCampaign';
+import { useCampaignsByCompany } from '@/hooks/useCampaign';
+import { useCompany } from '@/hooks/useCompany'; // Added this to fetch company details
 import { formatCurrency } from '@/utils/currency';
 
 export default function CompanyProfile() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    // 1. Fetch Data
-    // Note: In a real app, you might have a specific useCompany(id) hook. 
-    // Here we use the lists and find the specific item to match your provided hooks.
-    const { data: companies, isLoading: isLoadingCompany } = useCompanies();
-    const { data: campaigns, isLoading: isLoadingCampaigns } = useCampaigns();
+    // 1. Fetch Company Details (for the header and sidebar)
+    const { data: company, isLoading: isLoadingCompany } = useCompany(id);
 
-    // 2. Derive specific company data
-    const company = useMemo(() => {
-        return companies?.find(c => c.id === id || c.id === Number(id));
-    }, [companies, id]);
+    // 2. Fetch Campaigns (for the list)
+    const { data: campaigns, isLoading: isLoadingCampaigns } = useCampaignsByCompany(id);
 
-    // 3. Filter campaigns for this company
-    const companyCampaigns = useMemo(() => {
-        if (!campaigns || !company) return [];
-        return campaigns.filter(c => c.company?.id === company.id);
-    }, [campaigns, company]);
-
-    // 4. Calculate Statistics
+    // 3. Calculate Stats based on the fetched campaigns
     const stats = useMemo(() => {
-        if (!companyCampaigns.length) return { raised: 0, active: 0, total: 0 };
+        if (!campaigns || !campaigns.length) return { raised: 0, active: 0, total: 0 };
         return {
-            raised: companyCampaigns.reduce((acc, curr) => acc + (curr.raisedFunds || 0), 0),
-            active: companyCampaigns.filter(c => c.status === 'ACTIVE').length,
-            total: companyCampaigns.length
+            raised: campaigns.reduce((acc, curr) => acc + (curr.raisedFunds || 0), 0),
+            active: campaigns.filter(c => c.status === 'ACTIVE').length,
+            total: campaigns.length
         };
-    }, [companyCampaigns]);
+    }, [campaigns]);
 
     // Loading State
-    if (isLoadingCompany || isLoadingCampaigns) {
-        return <span>Loading...</span>
+    if (isLoadingCampaigns || isLoadingCompany) {
+        return (
+            <div className="flex h-96 w-full items-center justify-center">
+                <span className="text-muted-foreground animate-pulse">Loading profile...</span>
+            </div>
+        );
     }
 
     if (!company) {
@@ -80,10 +69,6 @@ export default function CompanyProfile() {
                 <div className="flex-1 space-y-2">
                     <div className="flex items-center gap-3">
                         <h1 className="text-3xl font-bold tracking-tight">{company.name}</h1>
-                        {/* Verify Badge Logic (Example) */}
-                        <Badge variant="secondary" className="gap-1">
-                            <CheckCircle2 className="h-3 w-3 text-blue-500" /> Verified
-                        </Badge>
                     </div>
 
                     <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
@@ -160,48 +145,19 @@ export default function CompanyProfile() {
                     </Card>
                 </div>
 
-                {/* Right Column: Content Tabs */}
-                <div className="lg:col-span-2">
-                    <Tabs defaultValue="campaigns" className="w-full">
-                        <TabsList>
-                            <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
-                            <TabsTrigger value="about">About</TabsTrigger>
-                        </TabsList>
-
-                        <TabsContent value="campaigns" className="mt-6">
-                            {companyCampaigns.length > 0 ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {companyCampaigns.map((campaign) => (
-                                        <CampaignCard key={campaign.id} campaign={campaign} />
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="text-center py-12 border rounded-lg bg-muted/10">
-                                    <p className="text-muted-foreground">No campaigns created yet.</p>
-                                </div>
-                            )}
-                        </TabsContent>
-
-                        <TabsContent value="about" className="mt-6">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>About {company.name}</CardTitle>
-                                    <CardDescription>Company Overview</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="leading-7 text-muted-foreground">
-                                        {company.description || "No description provided for this company."}
-                                    </p>
-
-                                    {/* Example placeholder for more static content */}
-                                    <h3 className="text-lg font-semibold mt-6 mb-2">Our Mission</h3>
-                                    <p className="leading-7 text-muted-foreground">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        </TabsContent>
-                    </Tabs>
+                {/* Right Column: Campaigns Grid (Takes up 2 columns space on large screens) */}
+                <div className="lg:col-span-2 space-y-6">
+                    {campaigns && campaigns.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {campaigns.map((campaign) => (
+                                <CampaignCard key={campaign.id} campaign={campaign} variant="mini" />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-12 border rounded-lg bg-muted/10">
+                            <p className="text-muted-foreground">No campaigns created yet.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

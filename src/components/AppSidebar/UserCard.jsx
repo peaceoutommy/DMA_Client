@@ -26,9 +26,11 @@ import { cn } from "@/lib/utils"
 
 import { useLogout } from "@/hooks/useAuth";
 import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export function UserCard({ collapsed = false }) {
     const { user } = useAuth()
+    const navigate = useNavigate();
     const logoutMutation = useLogout()
 
     if (!user) {
@@ -92,7 +94,7 @@ export function UserCard({ collapsed = false }) {
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(`/profile/${user.id}`)}>
                             <BadgeCheck className="h-4 w-4" />
                             Account
                         </DropdownMenuItem>
@@ -142,7 +144,7 @@ export function UserCard({ collapsed = false }) {
                 sideOffset={8}
             >
                 <DropdownMenuGroup>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(`/profile/${user.id}`)}>
                         <BadgeCheck className="h-4 w-4" />
                         Account
                     </DropdownMenuItem>
