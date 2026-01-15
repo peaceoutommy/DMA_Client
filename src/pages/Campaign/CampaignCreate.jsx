@@ -12,9 +12,10 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { useCompany } from '@/hooks/useCompany';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency } from '@/utils/currency';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function CampaignCreate() {
     const { user } = useAuth();
@@ -141,6 +142,24 @@ export default function CampaignCreate() {
                             </div>
                         </CardContent>
                     </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Preview</CardTitle>
+                            <CardDescription>
+                                This is how your description will appear
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+
+                            >
+                                {newItem?.description || '*Start typing to see a preview...*'}
+                            </ReactMarkdown>
+                        </CardContent>
+                    </Card>
+
 
                     {/* Funding & Timeline */}
                     <Card>

@@ -8,5 +8,8 @@ export const companyEmployeeService = {
     async addEmployee(membership) {
         const data = await api.post(`/companies/membership`, membership);
         return data;
+    },
+    async removeEmployee(membership){
+        const data = await api.post(`/companies/membership/remove`, membership);
     }
 }

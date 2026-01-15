@@ -8,11 +8,13 @@ import { Loader2 } from 'lucide-react';
 import { useCreateCompany, useCompanyTypes } from '@/hooks/useCompany';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from "sonner"
+import { useNavigate } from 'react-router-dom';
 
 export default function CompanyCreate() {
     const createCompany = useCreateCompany();
     const { data, isLoading } = useCompanyTypes();
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     const [companyData, setCompanyData] = useState({
         userId: null,
@@ -21,8 +23,6 @@ export default function CompanyCreate() {
         registrationNumber: '',
         taxId: ''
     });
-
-    console.log(user)
 
     const [errors, setErrors] = useState({});
 
@@ -75,6 +75,7 @@ export default function CompanyCreate() {
                         taxId: ''
                     });
                     setErrors({});
+                    navigate('/not-approved')
                     toast.dismiss();
                     toast.success("Company created successfully", { position: "top-center" })
                 },

@@ -75,8 +75,16 @@ export const columnsEmployee = (onEdit, onDelete) => [
                     <SquarePen className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
                 </Button>
+
+                <Button
+                    variant="ghost"
+                    className="h-8 w-8 p-0 hover:text-red-600 hover:bg-red-50"
+                    onClick={() => onDelete(row.original)}
+                >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">Delete</span>
+                </Button>
             </div>
         ),
     },
-
 ]

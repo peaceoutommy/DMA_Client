@@ -95,7 +95,7 @@ export default function App() {
                       <Route path="/companies/permissions" element={<PermissionManagement />} />
                       <Route path="/companies/types" element={<CompanyType />} />
                       <Route path="/tos" element={<TermsOfService />} />
-                      <Route path="/tickets" element={<ProtectedRoute requireRole={"ADMIN"}><TicketList /></ProtectedRoute>} />
+                      <Route path="/tickets" element={<TicketList />} />
                       <Route path="/tickets/:id" element={<TicketView />} />
                     </Routes>
                   </div>

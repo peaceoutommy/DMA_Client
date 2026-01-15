@@ -20,6 +20,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { formatCurrency } from '@/utils/currency';
 import { formatDate } from '@/utils/date';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { truncateMarkdown } from '@/utils/truncateMarkdown';
 
 export default function CampaignCard({ campaign, variant = 'default' }) {
   const {
@@ -51,7 +54,6 @@ export default function CampaignCard({ campaign, variant = 'default' }) {
     }
   };
 
-  // --- MINIMALISTIC / COMPACT VERSION ---
   if (variant === 'mini') {
     return (
       <Card
@@ -126,7 +128,6 @@ export default function CampaignCard({ campaign, variant = 'default' }) {
     );
   }
 
-  // --- DEFAULT FULL VERSION ---
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col group">
       {/* Campaign Image */}
@@ -177,9 +178,9 @@ export default function CampaignCard({ campaign, variant = 'default' }) {
 
       <CardContent className="space-y-4 flex-1">
         {/* Description */}
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {description}
-        </p>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {truncateMarkdown(description, 100)}
+        </ReactMarkdown>
 
         {/* Funding Progress */}
         <div className="space-y-2">

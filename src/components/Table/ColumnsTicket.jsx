@@ -22,7 +22,23 @@ export const columnsTicket = [
       row.original.message === null ? (
         <div className="font-medium">-</div>
       ) : (
-        <div className="font-medium">{row.original.message}</div>
+        <div
+          className="font-medium max-w-[300px] truncate"
+          title={row.original.message}
+        >{row.original.message}</div>
+      ),
+  },
+  {
+    accessorKey: "additionalInfo",
+    header: "Extra info",
+    cell: ({ row }) =>
+      row.original.additionalInfo === null ? (
+        <div className="font-medium">-</div>
+      ) : (
+        <div
+          className="font-medium max-w-[300px] truncate"
+          title={row.original.additionalInfo}
+        >{row.original.additionalInfo}</div>
       ),
   },
   {

@@ -25,3 +25,15 @@ export const useAddEmployee = () => {
         }
     })
 }
+
+export const useRemoveEmployee = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (membership) => companyEmployeeService.removeEmployee(membership),
+        onSuccess: (data, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: companyEmployeeKeys.list({ companyId: variables.companyId })
+            });
+        }
+    })
+}

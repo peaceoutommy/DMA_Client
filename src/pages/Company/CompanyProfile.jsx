@@ -22,13 +22,13 @@ export default function CompanyProfile() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    // 1. Fetch Company Details (for the header and sidebar)
+    // Fetch Company Details (for the header and sidebar)
     const { data: company, isLoading: isLoadingCompany } = useCompany(id);
 
-    // 2. Fetch Campaigns (for the list)
+    // Fetch Campaigns (for the list)
     const { data: campaigns, isLoading: isLoadingCampaigns } = useCampaignsByCompany(id);
 
-    // 3. Calculate Stats based on the fetched campaigns
+    // Calculate Stats based on the fetched campaigns
     const stats = useMemo(() => {
         if (!campaigns || !campaigns.length) return { raised: 0, active: 0, total: 0 };
         return {
@@ -38,7 +38,6 @@ export default function CompanyProfile() {
         };
     }, [campaigns]);
 
-    // Loading State
     if (isLoadingCampaigns || isLoadingCompany) {
         return (
             <div className="flex h-96 w-full items-center justify-center">
@@ -75,11 +74,6 @@ export default function CompanyProfile() {
                         {company.type?.name && (
                             <span className="flex items-center gap-1">
                                 <Building2 className="h-4 w-4" /> {company.type.name}
-                            </span>
-                        )}
-                        {company.address && (
-                            <span className="flex items-center gap-1">
-                                <MapPin className="h-4 w-4" /> {company.address || "Location N/A"}
                             </span>
                         )}
                         <span className="flex items-center gap-1">

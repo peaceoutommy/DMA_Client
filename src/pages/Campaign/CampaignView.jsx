@@ -16,7 +16,8 @@ import { useAuth } from '@/context/AuthContext';
 import { loadStripe } from '@stripe/stripe-js';
 import { campaignKeys } from '@/hooks/useCampaign';
 import { useQueryClient } from '@tanstack/react-query';
-
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function CampaignView() {
     const { id } = useParams();
@@ -183,9 +184,9 @@ export default function CampaignView() {
                             <CardTitle>About This Campaign</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-muted-foreground leading-relaxed">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {campaign.description}
-                            </p>
+                            </ReactMarkdown>
                         </CardContent>
                     </Card>
 

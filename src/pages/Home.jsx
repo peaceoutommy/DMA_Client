@@ -27,7 +27,7 @@ export default function Home() {
     const [searchQuery, setSearchQuery] = useState('');
     const [featuredCampaigns, setFeaturedCampaigns] = useState(null);
     const { user } = useAuth();
-    const { data, isLoading, isError, error, isFetching } = useCampaigns();
+    const { data, isLoading } = useCampaigns();
 
 
     useEffect(() => {
