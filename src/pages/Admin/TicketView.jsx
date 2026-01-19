@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { toast } from "sonner"
 import { FileText, Image, Video, File, CheckCircle, XCircle, Clock, Calendar } from 'lucide-react';
 import { useTicket } from '@/hooks/useTicket';
 import { useCloseTicket } from '@/hooks/useTicket';
@@ -51,19 +51,52 @@ export default function TicketView() {
 
     const handleApprove = async () => {
         if (!ticketCloseDto.message.trim()) {
+            toast.error("Please enter a close message");
             return;
         }
 
-        setTicketCloseDto({ ...ticketCloseDto, status: 'APPROVED' });
-        await closeTicketMutation.mutateAsync(ticketCloseDto);
+        setProcessing(true);
+
+        try {
+            const closeRequest = {
+                id: parseInt(id),
+                message: ticketCloseDto.message,
+                status: 'APPROVED'
+            };
+
+            await closeTicketMutation.mutateAsync(closeRequest);
+            toast.success("Ticket approved successfully", { position: "top-center" });
+        } catch (error) {
+            console.error("Error approving ticket:", error);
+            toast.error("Failed to approve ticket", { position: "top-center" });
+        } finally {
+            setProcessing(false);
+        }
     };
 
     const handleReject = async () => {
         if (!ticketCloseDto.message.trim()) {
+            toast.error("Please enter a close message", { position: "top-center" });
             return;
         }
-        setTicketCloseDto({ ...ticketCloseDto, status: 'REJECTED' });
-        await closeTicketMutation.mutateAsync(ticketCloseDto);
+
+        setProcessing(true);
+
+        try {
+            const closeRequest = {
+                id: parseInt(id),
+                message: ticketCloseDto.message,
+                status: 'REJECTED'
+            };
+
+            await closeTicketMutation.mutateAsync(closeRequest);
+            toast.success("Ticket rejected successfully");
+        } catch (error) {
+            console.error("Error rejecting ticket:", error);
+            toast.error("Failed to reject ticket", { position: "top-center" });
+        } finally {
+            setProcessing(false);
+        }
     };
 
     if (isLoading) {
