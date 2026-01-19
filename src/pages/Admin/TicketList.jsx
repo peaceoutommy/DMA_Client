@@ -12,7 +12,7 @@ export default function TicketList() {
     if (isLoading || !user) {
         return <div>Loading...</div>
     }
-    console.log(data)
+
     return (
         <>
             <DataTable columns={columnsTicket} data={data} filterColumn="name" showSelected={false} />

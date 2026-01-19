@@ -8,7 +8,7 @@ export const columnsTicket = [
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => <div className="font-medium">{row.original.name}</div>,
+    cell: ({ row }) => <div className="font-medium min-w-[150px]">{row.original.name}</div>,
   },
   {
     accessorKey: "status",
@@ -23,7 +23,7 @@ export const columnsTicket = [
         <div className="font-medium">-</div>
       ) : (
         <div
-          className="font-medium max-w-[300px] truncate"
+          className="font-medium max-w-[200px] truncate" // ← Reduced from 300px
           title={row.original.message}
         >{row.original.message}</div>
       ),
@@ -36,26 +36,26 @@ export const columnsTicket = [
         <div className="font-medium">-</div>
       ) : (
         <div
-          className="font-medium max-w-[300px] truncate"
+          className="font-medium max-w-[200px] truncate" // ← Reduced from 300px
           title={row.original.additionalInfo}
         >{row.original.additionalInfo}</div>
       ),
   },
   {
     accessorKey: "createDate",
-    header: "Created At",
+    header: "Created",  // ← Shorter header
     cell: ({ row }) => (
-      <div className="font-medium">{formatDateTime(row.original.createDate)}</div>
+      <div className="font-medium whitespace-nowrap">{formatDateTime(row.original.createDate)}</div>
     ),
   },
   {
     accessorKey: "closeDate",
-    header: "Closed At",
+    header: "Closed",  // ← Shorter header
     cell: ({ row }) =>
       row.original.closeDate === null ? (
         <div className="font-medium">-</div>
       ) : (
-        <div className="font-medium">{formatDateTime(row.original.closeDate)}</div>
+        <div className="font-medium whitespace-nowrap">{formatDateTime(row.original.closeDate)}</div>
       ),
   },
   {
