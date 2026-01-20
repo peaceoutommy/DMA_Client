@@ -54,12 +54,12 @@ export default function FundRequest() {
                 amount: fundRequest.amount,
                 companyId: user?.companyId,
             });
-            toast.success('Funding request submitted successfully!');
+            toast.success('Funding request submitted successfully!', { position: 'top-center' });
             setFundRequestModalOpen(false);
             setFundRequest({ message: '', amount: '' });
             setSelectedCampaign(null);
         } catch (error) {
-            toast.error('Failed to submit funding request. Please try again.');
+            toast.error('Failed to submit funding request. Please try again.', { position: 'top-center' });
         }
     };
 

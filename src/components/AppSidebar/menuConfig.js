@@ -34,6 +34,7 @@ export const getMenuItems = (user) => {
                 { title: "Profile", url: `/companies/${user?.companyId}`, icon: Building2, visible: hasCompany },
                 { title: "Roles", url: `/companies/roles`, icon: Building2, visible: hasCompany },
                 { title: "Employees", url: `/companies/employees`, icon: Building2, visible: hasCompany },
+                { title: "Funding", url: "/funding", icon: Building2, visible: isCompanyAccount && hasCompany },
             ],
         },
         {

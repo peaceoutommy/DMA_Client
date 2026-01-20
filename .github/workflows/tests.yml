@@ -11,6 +11,29 @@ jobs:
     name: Cypress E2E Tests
     runs-on: ubuntu-latest
     
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: test_db
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      api:
+        image: peaceoutommy/dma-api:main
+        env:
+          SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/test_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+          SPRING_DATASOURCE_USERNAME: root
+          SPRING_DATASOURCE_PASSWORD: root
+        ports:
+          - 8080:8080
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,6 +53,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # ---------------------------------------------------------------
+      # WAIT FOR API
+      # ---------------------------------------------------------------
+      # "tcp" checks if the port is accepting connections
+      - name: Wait for API to be ready
+        run: |
+          npm install -g wait-on
+          npx wait-on tcp:localhost:8080 --timeout 60000
+
+      # ---------------------------------------------------------------
+      # RUN CYPRESS
+      # ---------------------------------------------------------------
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
@@ -38,19 +73,5 @@ jobs:
           wait-on-timeout: 120
           browser: chrome 
           record: false
-
-      - name: Upload Cypress screenshots on failure
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: cypress-screenshots-${{ github.sha }}
-          path: cypress/screenshots
-          retention-days: 7
-
-      - name: Upload Cypress videos
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: cypress-videos-${{ github.sha }}
-          path: cypress/videos
-          retention-days: 7
+        env:
+          VITE_API_URL: http://localhost:8080
