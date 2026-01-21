@@ -1,24 +1,9 @@
-/**
- * E2E Test: Company & Campaign Approval Workflow
- *
- * This test validates the complete flow:
- * 1. User creates a Company account
- * 2. User submits a Company creation request
- * 3. User is redirected to the "Not Approved" page
- * 4. User cannot access campaign creation (protected route)
- * 5. Admin approves the company (via database)
- * 6. User can now create a campaign
- * 7. Admin approves the campaign (via database)
- *
- * Note: Uses REAL API calls and database tasks for admin operations.
- */
-
 describe('Company & Campaign Approval Workflow', () => {
   const timestamp = Date.now();
 
-  // ============================================
+  // 
   // Test Data
-  // ============================================
+  // 
   const testUser = {
     firstName: 'Tomas',
     lastName: 'Lopes',
@@ -56,18 +41,18 @@ describe('Company & Campaign Approval Workflow', () => {
     type: 1,
   };
 
-  // ============================================
+  // 
   // IDs for Cleanup
-  // ============================================
+  // 
   let userId = null;
   let companyTypeId = null;
   let companyId = null;
   let campaignId = null;
   let permissionId = null;
 
-  // ============================================
+  // 
   // Cleanup
-  // ============================================
+  // 
   before(() => {
     // Clean up any leftover data from previous failed test runs
     cy.task('cleanupByUsernamePattern', 'tlopes_%');
@@ -83,9 +68,9 @@ describe('Company & Campaign Approval Workflow', () => {
     });
   });
 
-  // ============================================
+  // 
   // Main Test
-  // ============================================
+  // 
   it('should complete the full company and campaign approval workflow', () => {
     // PHASE 1: User Registration
     cy.log('**PHASE 1: User Registration**');
@@ -124,9 +109,9 @@ describe('Company & Campaign Approval Workflow', () => {
     cy.log('**WORKFLOW COMPLETE**');
   });
 
-  // ============================================
+  // 
   // Helper Functions
-  // ============================================
+  // 
 
   function registerUser() {
     cy.visit('/authenticate');
@@ -142,7 +127,15 @@ describe('Company & Campaign Approval Workflow', () => {
     cy.get('#register-address').type(testUser.address);
     cy.get('#register-password').type(testUser.password);
     cy.get('#register-confirm').type(testUser.password);
+
+    cy.intercept('POST', '/api/auth/register').as('register');
     cy.get('[data-test="register-submit"]').click();
+
+    cy.wait('@register').then((interception) => {
+      cy.log('Registration status:', interception.response.statusCode);
+      cy.log('Registration response:', JSON.stringify(interception.response.body));
+      expect(interception.response.statusCode).to.eq(200);
+    });
 
     cy.url().should('eq', `${Cypress.config('baseUrl')}/`, { timeout: 15000 });
     cy.window().its('localStorage.auth_token').should('exist');
