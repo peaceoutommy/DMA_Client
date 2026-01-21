@@ -109,7 +109,7 @@ jobs:
           browser: chrome
           record: false
         env:
-          VITE_API_URL: http://localhost:8080
+          VITE_API_URL: http://localhost:8080/api
           CYPRESS_API_URL: http://localhost:8080/api
           CYPRESS_DB_HOST: 127.0.0.1
           CYPRESS_DB_PORT: 3306
