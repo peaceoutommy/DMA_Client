@@ -66,6 +66,7 @@ jobs:
             -e SPRING_DATASOURCE_PASSWORD=root \
             -e SPRING_JPA_HIBERNATE_DDL_AUTO=create \
             -e SPRING_JPA_SHOW_SQL=false \
+            -e JWT_SECRET=e2e-test-secret-key-that-is-long-enough-for-jwt-signing \
             peaceoutommy/dma-api:main
 
       - name: Wait for API to be ready
