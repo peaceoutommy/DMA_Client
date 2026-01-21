@@ -301,23 +301,7 @@ export function createDbTasks(config) {
     },
 
     /**
-     * Clean up ALL test data. Order matters due to foreign key constraints.
-     *
-     * Deletion order:
-     * 1. donation (FK → campaign, users)
-     * 2. fund_request (FK → campaign, company)
-     * 3. app_file for campaigns
-     * 4. ticket for campaigns
-     * 5. campaign (FK → company)
-     * 6. Nullify users FK references
-     * 7. company_role_permission (FK → company_role, company_permission)
-     * 8. company_role (FK → company)
-     * 9. ticket for companies
-     * 10. app_file for companies
-     * 11. company (FK → company_type)
-     * 12. users
-     * 13. company_permission
-     * 14. company_type
+     * Clean up ALL test data
      */
     async cleanupTestData({
       userIds = [],
