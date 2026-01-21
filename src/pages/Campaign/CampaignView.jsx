@@ -14,7 +14,10 @@ import DonationModal from '@/components/Modal/DonationModal';
 import { useCreateDonation } from '@/hooks/useDonation';
 import { useAuth } from '@/context/AuthContext';
 import { loadStripe } from '@stripe/stripe-js';
-
+import { campaignKeys } from '@/hooks/useCampaign';
+import { useQueryClient } from '@tanstack/react-query';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function CampaignView() {
     const { id } = useParams();
@@ -22,14 +25,15 @@ export default function CampaignView() {
     const navigate = useNavigate();
     const { data: campaign, isLoading, isError } = useCampaign(id);
     const createDonation = useCreateDonation();
+    const queryClient = useQueryClient();
 
     const [isDonateOpen, setIsDonateOpen] = useState(false);
     const [newDonation, setNewDonation] = useState(null);
     const [clientSecret, setClientSecret] = useState(null);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
     const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISH_KEY);
 
-    // Campaign status badge variant
     const getStatusVariant = (status) => {
         switch (status) {
             case 'ACTIVE':
@@ -61,8 +65,6 @@ export default function CampaignView() {
 
         createDonation.mutate(donationData, {
             onSuccess: (response) => {
-                // setIsDonateOpen(false);
-                // setNewDonation(null);
                 setClientSecret(response.clientSecret);
             },
             onError: (error) => {
@@ -79,6 +81,19 @@ export default function CampaignView() {
         })
     };
 
+    const handlePayment = () => {
+        queryClient.refetchQueries({
+            queryKey: campaignKeys.all
+        });
+
+        toast.dismiss();
+        toast.success('Donation was successfull, thank you!', { position: 'top-center' })
+
+        setIsDonateOpen(false);
+        setClientSecret(null);
+        setNewDonation(null);
+    }
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -94,8 +109,6 @@ export default function CampaignView() {
 
     return (
         <div className="max-w-6xl mx-auto space-y-6">
-            {/* Header */}
-            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <div className="flex-1">
                     <h1 className="text-3xl font-bold">{campaign.name}</h1>
@@ -127,14 +140,41 @@ export default function CampaignView() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Content */}
                 <div className="lg:col-span-2 space-y-6">
-                    {/* Campaign Image */}
-                    {campaign.images && campaign.images.length > 0 && (
+                    {/* Images Gallery */}
+                    {campaign.files && campaign.files.length > 0 && (
                         <Card className="overflow-hidden">
-                            <img
-                                src={campaign.images[0]}
-                                alt={campaign.name}
-                                className="w-full h-96 object-cover"
-                            />
+                            <div className="space-y-2 p-2">
+                                {/* Main Image */}
+                                <div className="relative w-full h-96 overflow-hidden rounded-lg">
+                                    <img
+                                        src={campaign.files[selectedImageIndex || 0].url}
+                                        alt={campaign.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+
+                                {/* Thumbnails */}
+                                {campaign.files.length > 1 && (
+                                    <div className="grid grid-cols-5 gap-2">
+                                        {campaign.files.map((file, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => setSelectedImageIndex(index)}
+                                                className={`relative aspect-video overflow-hidden rounded border-2 transition-all ${(selectedImageIndex || 0) === index
+                                                    ? 'border-primary'
+                                                    : 'border-transparent hover:border-muted-foreground'
+                                                    }`}
+                                            >
+                                                <img
+                                                    src={file.url}
+                                                    alt={`Thumbnail ${index + 1}`}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </Card>
                     )}
 
@@ -144,9 +184,9 @@ export default function CampaignView() {
                             <CardTitle>About This Campaign</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-muted-foreground leading-relaxed">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {campaign.description}
-                            </p>
+                            </ReactMarkdown>
                         </CardContent>
                     </Card>
 
@@ -256,6 +296,7 @@ export default function CampaignView() {
                 setNewDonation={setNewDonation}
                 clientSecret={clientSecret}
                 stripePromise={stripePromise}
+                onPayment={handlePayment}
             />
         </div>
     );

@@ -7,7 +7,7 @@ import { EuroIcon } from 'lucide-react';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '@/components/CheckoutForm';
 
-export default function DonationModal({ open, onClose, onSave, campaign, newDonation, setNewDonation, clientSecret, stripePromise }) {
+export default function DonationModal({ open, onClose, onSave, campaign, newDonation, setNewDonation, clientSecret, stripePromise, onPayment }) {
     const presetAmounts = [5, 25, 50, 100, 250, 500];
 
     return (
@@ -72,7 +72,7 @@ export default function DonationModal({ open, onClose, onSave, campaign, newDona
 
                 {clientSecret && (
                     <Elements stripe={stripePromise} options={{ clientSecret }}>
-                        <CheckoutForm />
+                        <CheckoutForm campaignId={campaign.id} onPayment={onPayment} />
                     </Elements>
                 )}
 

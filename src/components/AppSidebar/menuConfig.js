@@ -23,7 +23,7 @@ export const getMenuItems = (user) => {
             visible: user,
             child: [
                 { title: "List", url: "/companies", icon: Building2, visible: true },
-                { title: "Create", url: "/companies/create", icon: Building2, visible: isCompanyAccount},
+                { title: "Create", url: "/companies/create", icon: Building2, visible: isCompanyAccount && !hasCompany },
             ],
         },
         {
@@ -31,8 +31,10 @@ export const getMenuItems = (user) => {
             icon: Building2,
             visible: hasCompany,
             child: [
+                { title: "Profile", url: `/companies/${user?.companyId}`, icon: Building2, visible: hasCompany },
                 { title: "Roles", url: `/companies/roles`, icon: Building2, visible: hasCompany },
                 { title: "Employees", url: `/companies/employees`, icon: Building2, visible: hasCompany },
+                { title: "Funding", url: "/funding", icon: Building2, visible: isCompanyAccount && hasCompany },
             ],
         },
         {
@@ -42,6 +44,7 @@ export const getMenuItems = (user) => {
             child: [
                 { title: "Company Types", url: "/companies/types", icon: Building2, visible: isAdmin },
                 { title: "Permissions", url: "/companies/permissions", icon: Building2, visible: isAdmin },
+                { title: "Tickets", url: "/tickets", icon: Building2, visible: isAdmin },
             ],
         }
     ]

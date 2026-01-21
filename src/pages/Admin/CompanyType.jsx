@@ -20,6 +20,8 @@ export default function CompanyType() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
 
+    console.log("Company Types Data:", data);
+
     const handleAdd = () => {
         setIsAddModalOpen(true);
     }

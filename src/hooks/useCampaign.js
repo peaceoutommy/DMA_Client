@@ -11,7 +11,15 @@ export const campaignKeys = {
 export const useCampaigns = () => {
     return useQuery({
         queryKey: campaignKeys.all,
-        queryFn: () => campaignService.getAll().then(res => res.data.campaigns),
+        queryFn: () => campaignService.getAll().then(res => res.data.campaigns)
+    });
+}
+
+export const useCampaignsByCompany = (companyId) => {
+    return useQuery({
+        queryKey: campaignKeys.list({ companyId }),
+        queryFn: () => campaignService.getByCompany(companyId).then(res => res.data.campaigns),
+        enabled: !!companyId,
     });
 }
 

@@ -5,6 +5,10 @@ export const campaignService = {
         const data = await api.get('/campaigns');
         return data
     },
+    async getByCompany(companyId) {
+        const data = await api.get(`/campaigns/company/${companyId}`);
+        return data;
+    },
     async getById(id) {
         const data = await api.get(`/campaigns/${id}`);
         return data;

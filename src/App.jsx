@@ -5,23 +5,33 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "./context/ThemeContext";
 import { AppSidebar } from "@/components/AppSidebar/AppSidebar";
 import { Toaster } from "@/components/ui/sonner"
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
 import Authenticate from "./pages/Authenticate";
+import NotApprovedYet from "./pages/NotApprovedYet";
+
 import CampaignList from "./pages/Campaign/CampaignList";
 import CampaignCreate from "./pages/Campaign/CampaignCreate";
 
 import CompanyList from "./pages/Company/CompanyList";
 import CompanyCreate from "./pages/Company/CompanyCreate";
-import CompanyRoleManagement from "./pages/Company/CompanyRoleManagement";
-import Employee from "./pages/Company/EmployeeManagement";
-
+import CompanyProfile from "./pages/Company/CompanyProfile";
 import CompanyType from "./pages/Admin/CompanyType";
+import CompanyRoleManagement from "./pages/Company/CompanyRoleManagement";
+
+import Employee from "./pages/Company/EmployeeManagement";
+import UserProfile from "./pages/User/UserProfile";
+
 import PermissionManagement from "./pages/Admin/PermissionManagement";
 import AppNavbar from "./components/AppNavbar/AppNavbar";
 import TermsOfService from "./pages/TermsOfService";
 import CampaignView from "./pages/Campaign/CampaignView";
 import Footer from "./components/AppFooter/AppFooter"
+
+import TicketList from "./pages/Admin/TicketList";
+import TicketView from "./pages/Admin/TicketView";
+import FundRequest from "./pages/Campaign/FundRequest";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,21 +57,46 @@ export default function App() {
               <AppSidebar />
               <main className="flex flex-col w-full min-h-screen">
                 <AppNavbar />
-                <div className="p-4 md:p-8 lg:p-12 bg-gradient-to-br from-primary/10 via-background to-background flex-grow">
+                <div className="p-4 md:p-8 lg:p-12 flex-grow">
                   <div className="max-w-7xl mx-auto">
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/authenticate" element={<Authenticate />} />
+                      <Route path="/not-approved" element={<NotApprovedYet />} />
                       <Route path="/campaigns" element={<CampaignList />} />
                       <Route path="/campaigns/:id" element={<CampaignView />} />
-                      <Route path="/campaigns/create" element={<CampaignCreate />} />
+                      <Route path="/profile/:id" element={<UserProfile />} />
+
+                      <Route
+                        path="/campaigns/create"
+                        element={
+                          <ProtectedRoute requireCompanyActive>
+                            <CampaignCreate />
+                          </ProtectedRoute>
+                        }
+                      />
+
                       <Route path="/companies" element={<CompanyList />} />
-                      <Route path="/companies/create" element={<CompanyCreate />} />
+                      <Route path="/companies/:id" element={<CompanyProfile />} />
+
+                      <Route
+                        path="/companies/create"
+                        element={
+                          <ProtectedRoute>
+                            <CompanyCreate />
+                          </ProtectedRoute>
+                        }
+                      />
+
+                      <Route path="/funding" element={<FundRequest />} />
+
                       <Route path="/companies/roles" element={<CompanyRoleManagement />} />
                       <Route path="/companies/employees" element={<Employee />} />
                       <Route path="/companies/permissions" element={<PermissionManagement />} />
                       <Route path="/companies/types" element={<CompanyType />} />
                       <Route path="/tos" element={<TermsOfService />} />
+                      <Route path="/tickets" element={<TicketList />} />
+                      <Route path="/tickets/:id" element={<TicketView />} />
                     </Routes>
                   </div>
                 </div>

@@ -14,7 +14,7 @@ export const companyKeys = {
 export const useCompanies = () => {
     return useQuery({
         queryKey: companyKeys.all,
-        queryFn: () => companyService.getAll().then(res => res.data.companies),
+        queryFn: () => companyService.getAll().then(res => res.data.companies || []),
     });
 }
 
@@ -37,7 +37,7 @@ export const useCreateCompany = () => {
 export const useCompanyTypes = () => {
     return useQuery({
         queryKey: companyKeys.types(),
-        queryFn: () => companyService.getAllTypes().then(res => res.data.types),
+        queryFn: () => companyService.getAllTypes().then(res => res.data.companyTypes ),
     });
 }
 

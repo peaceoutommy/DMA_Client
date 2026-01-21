@@ -8,11 +8,13 @@ import { Loader2 } from 'lucide-react';
 import { useCreateCompany, useCompanyTypes } from '@/hooks/useCompany';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from "sonner"
+import { useNavigate } from 'react-router-dom';
 
 export default function CompanyCreate() {
     const createCompany = useCreateCompany();
     const { data, isLoading } = useCompanyTypes();
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     const [companyData, setCompanyData] = useState({
         userId: null,
@@ -21,8 +23,6 @@ export default function CompanyCreate() {
         registrationNumber: '',
         taxId: ''
     });
-
-    console.log(user)
 
     const [errors, setErrors] = useState({});
 
@@ -52,6 +52,10 @@ export default function CompanyCreate() {
     };
 
     const handleSubmit = () => {
+        toast.dismiss();
+        toast.loading("Creating company...", {
+            position: "top-center",
+        })
         if (validateForm()) {
             const payload = {
                 userId: user.id,
@@ -71,12 +75,26 @@ export default function CompanyCreate() {
                         taxId: ''
                     });
                     setErrors({});
+                    navigate('/not-approved')
+                    toast.dismiss();
+                    toast.success("Company created successfully", { position: "top-center" })
                 },
+                onError: (error) => {
+                    toast.dismiss();
+                    const errorMessage = error.response?.data?.message ||
+                        error.message ||
+                        "Failed to create company";
+
+                    toast.error("Failed to create company", {
+                        position: "top-center",
+                        description: errorMessage,
+                    });
+                }
             });
         }
     };
 
-    if(!user){
+    if (!user) {
         return <div>Loading...</div>
     }
 
@@ -88,6 +106,7 @@ export default function CompanyCreate() {
                         <Label htmlFor="company-name">Company Name *</Label>
                         <Input
                             id="company-name"
+                            data-test="company-name"
                             placeholder="Enter company name"
                             value={companyData.name}
                             onChange={(e) => {
@@ -105,6 +124,7 @@ export default function CompanyCreate() {
                         <Label htmlFor="company-registration">Registration Number *</Label>
                         <Input
                             id="company-registration"
+                            data-test="company-registration"
                             placeholder="e.g., 12345678"
                             value={companyData.registrationNumber}
                             onChange={(e) => {
@@ -127,6 +147,7 @@ export default function CompanyCreate() {
                         <Label htmlFor="company-tax">Tax ID *</Label>
                         <Input
                             id="company-tax"
+                            data-test="company-taxId"
                             placeholder="e.g., NL123456789B01"
                             value={companyData.taxId}
                             onChange={(e) => {
@@ -160,7 +181,7 @@ export default function CompanyCreate() {
                                     setCompanyData({ ...companyData, typeId: parseInt(value) })
                                 }
                             >
-                                <SelectTrigger id="company-type">
+                                <SelectTrigger id="company-type" data-test="company-type">
                                     <SelectValue placeholder="Select a company type" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -177,6 +198,7 @@ export default function CompanyCreate() {
                     <Button
                         onClick={handleSubmit}
                         className="w-full mt-2"
+                        data-test="company-submit"
                         disabled={createCompany.isPending}
                     >
                         {createCompany.isPending ? (

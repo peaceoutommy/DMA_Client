@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,9 +12,10 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { useCompany } from '@/hooks/useCompany';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency } from '@/utils/currency';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function CampaignCreate() {
     const { user } = useAuth();
@@ -26,20 +27,36 @@ export default function CampaignCreate() {
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
-        const newImages = files.map(file => ({
+
+        const availableSlots = 5 - images.length;
+        const filesToAdd = files.slice(0, availableSlots);
+
+        const newImages = filesToAdd.map(file => ({
             file,
             preview: URL.createObjectURL(file)
         }));
-        setImages(prev => [...prev, ...newImages].slice(0, 5)); // Max 5 images
+
+        setImages(prev => [...prev, ...newImages]);
+        e.target.value = '';
     };
 
     const removeImage = (index) => {
+        // Revoke the object URL to free memory
+        URL.revokeObjectURL(images[index].preview);
         setImages(prev => prev.filter((_, i) => i !== index));
     };
 
+    // Add cleanup on component unmount or successful submission
+    useEffect(() => {
+        return () => {
+            images.forEach(image => URL.revokeObjectURL(image.preview));
+        };
+    }, [images]);
+
 
     const handleSubmit = () => {
-        toast.loading("Creating campaign...", { id: "loadingToast", position: "top-center" });
+        toast.dismiss();
+        toast.loading("Creating campaign...", { position: "top-center" });
 
         const formData = new FormData();
         formData.append('name', newItem.name.trim());
@@ -58,15 +75,17 @@ export default function CampaignCreate() {
             formData.append('images', image.file);
         });
 
-
         createCampaign.mutate(formData, {
-            onSuccess: () => {
+            onSuccess: (data) => {
                 setnewItem(null);
                 setImages([]);
-                toast.success("Campaign created successfully!", { id: "loadingToast", position: "top-center" });
+                toast.dismiss();
+                toast.success("Campaign created successfully!", { position: "top-center" });
+                navigate(`/campaigns/${data.id}`)
             },
             onError: () => {
-                toast.error("Failed to create campaign", { id: "loadingToast", position: "top-center" });
+                toast.dismiss();
+                toast.error("Failed to create campaign", { position: "top-center" });
             }
         });
     };
@@ -97,6 +116,7 @@ export default function CampaignCreate() {
                                 <Label htmlFor="campaign-name">Campaign Name *</Label>
                                 <Input
                                     id="campaign-name"
+                                    data-test="campaign-name"
                                     placeholder="e.g., Clean Water Initiative"
                                     value={newItem?.name || ''}
                                     onChange={(e) => {
@@ -109,6 +129,7 @@ export default function CampaignCreate() {
                                 <Label htmlFor="campaign-description">Description *</Label>
                                 <Textarea
                                     id="campaign-description"
+                                    data-test="campaign-description"
                                     placeholder="Describe your campaign goals, impact, and why people should support it..."
                                     value={newItem?.description || ''}
                                     onChange={(e) => {
@@ -123,6 +144,24 @@ export default function CampaignCreate() {
                             </div>
                         </CardContent>
                     </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Preview</CardTitle>
+                            <CardDescription>
+                                This is how your description will appear
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+
+                            >
+                                {newItem?.description || '*Start typing to see a preview...*'}
+                            </ReactMarkdown>
+                        </CardContent>
+                    </Card>
+
 
                     {/* Funding & Timeline */}
                     <Card>
@@ -140,6 +179,7 @@ export default function CampaignCreate() {
                                 </Label>
                                 <Input
                                     id="campaign-goal"
+                                    data-test="campaign-goal"
                                     placeholder="€10,000"
                                     value={newItem?.fundGoal || ''}
                                     onChange={(e) => {
@@ -156,6 +196,7 @@ export default function CampaignCreate() {
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant="outline"
+                                                data-test="campaign-start-date"
                                                 className={cn(
                                                     "w-full justify-start text-left font-normal",
                                                     !newItem?.startDate && "text-muted-foreground",
@@ -185,6 +226,7 @@ export default function CampaignCreate() {
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant="outline"
+                                                data-test="campaign-end-date"
                                                 className={cn(
                                                     "w-full justify-start text-left font-normal",
                                                     !newItem?.endDate && "text-muted-foreground",
@@ -249,6 +291,7 @@ export default function CampaignCreate() {
                                                 accept="image/*"
                                                 multiple
                                                 className="hidden"
+                                                data-test="campaign-image-upload"
                                                 onChange={handleImageUpload}
                                             />
                                         </label>
@@ -266,7 +309,7 @@ export default function CampaignCreate() {
                                 Cancel
                             </Button>
 
-                            <Button onClick={handleSubmit} disabled={createCampaign.isPending}>
+                            <Button onClick={handleSubmit} data-test="campaign-submit" disabled={createCampaign.isPending}>
                                 {createCampaign.isPending ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

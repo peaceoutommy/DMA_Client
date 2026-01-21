@@ -1,5 +1,6 @@
-import { ArrowUpDown, SquarePen, Trash2 } from "lucide-react"
+import { ArrowUpDown, Eye, SquarePen, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
 
 export const columnsCompany = [
     {
@@ -58,26 +59,21 @@ export const columnsCompany = [
     {
         accessorKey: "actions",
         header: "Actions",
-        cell: ({ row }) => (
-            <div className="flex gap-1">
+        cell: ({ row }) => {
+            const id = row.original.id
+            const navigate = useNavigate()
+
+            return (
                 <Button
                     variant="ghost"
                     className="h-8 w-8 p-0 hover:text-blue-700"
-                   
+                    onClick={() => navigate(`/companies/${id}`)}
                 >
-                    <SquarePen className="h-4 w-4" />
-                    <span className="sr-only">Edit</span>
+                    <Eye className="h-4 w-4" />
+                    <span className="sr-only">View</span>
                 </Button>
-                <Button
-                    variant="ghost"
-                    className="h-8 w-8 p-0"
-                    
-                >
-                    <Trash2 className="h-4 w-4 hover:text-red-600" />
-                    <span className="sr-only">Delete</span>
-                </Button>
-            </div>
-        ),
+            )
+        },
     },
 
 ]

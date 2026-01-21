@@ -21,7 +21,8 @@ export default function CampaignList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const { data, isLoading, isError, error, isFetching } = useCampaigns();
+  const { data, isLoading, isError } = useCampaigns();
+  console.log(data)
 
   const filteredCampaigns = useMemo(() => {
     if (!data) return [];
@@ -35,7 +36,7 @@ export default function CampaignList() {
     });
   }, [data, searchQuery, statusFilter]);
 
-  if (!data) return <p>Loading...</p>
+  if (!data || isLoading) return <p>Loading...</p>
 
   return (
     <div className="space-y-6">
