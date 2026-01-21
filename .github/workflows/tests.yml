@@ -10,7 +10,7 @@ jobs:
   cypress-run:
     name: Cypress E2E Tests
     runs-on: ubuntu-latest
-    
+
     services:
       mysql:
         image: mysql:8.0
@@ -56,11 +56,27 @@ jobs:
       # ---------------------------------------------------------------
       # WAIT FOR API
       # ---------------------------------------------------------------
-      # "tcp" checks if the port is accepting connections
+      # First wait for TCP port, then verify HTTP endpoint responds
       - name: Wait for API to be ready
         run: |
           npm install -g wait-on
+          echo "Waiting for API TCP port..."
           npx wait-on tcp:localhost:8080 --timeout 180000
+          echo "TCP port ready, checking HTTP health..."
+          for i in {1..60}; do
+            if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/health 2>/dev/null | grep -q "200\|404"; then
+              echo "API is responding to HTTP requests"
+              break
+            fi
+            if curl -s http://localhost:8080/actuator/health 2>/dev/null | grep -q "UP"; then
+              echo "API health check passed"
+              break
+            fi
+            echo "Waiting for API HTTP response... attempt $i/60"
+            sleep 5
+          done
+          # Final verification
+          curl -v http://localhost:8080/api/active"
 
       # ---------------------------------------------------------------
       # RUN CYPRESS
@@ -71,7 +87,34 @@ jobs:
           start: npm run dev
           wait-on: 'http://localhost:5173'
           wait-on-timeout: 120
-          browser: chrome 
+          browser: chrome
           record: false
         env:
+          # Frontend environment
           VITE_API_URL: http://localhost:8080
+          # Cypress environment variables for database tasks
+          CYPRESS_API_URL: http://localhost:8080/api
+          CYPRESS_DB_HOST: localhost
+          CYPRESS_DB_PORT: 3306
+          CYPRESS_DB_USER: root
+          CYPRESS_DB_PASSWORD: root
+          CYPRESS_DB_NAME: test_db
+
+      # ---------------------------------------------------------------
+      # UPLOAD ARTIFACTS ON FAILURE
+      # ---------------------------------------------------------------
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore
+
+      - name: Upload Cypress videos
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+          if-no-files-found: ignore

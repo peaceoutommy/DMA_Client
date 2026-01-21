@@ -116,6 +116,7 @@ export default function CampaignCreate() {
                                 <Label htmlFor="campaign-name">Campaign Name *</Label>
                                 <Input
                                     id="campaign-name"
+                                    data-test="campaign-name"
                                     placeholder="e.g., Clean Water Initiative"
                                     value={newItem?.name || ''}
                                     onChange={(e) => {
@@ -128,6 +129,7 @@ export default function CampaignCreate() {
                                 <Label htmlFor="campaign-description">Description *</Label>
                                 <Textarea
                                     id="campaign-description"
+                                    data-test="campaign-description"
                                     placeholder="Describe your campaign goals, impact, and why people should support it..."
                                     value={newItem?.description || ''}
                                     onChange={(e) => {
@@ -177,6 +179,7 @@ export default function CampaignCreate() {
                                 </Label>
                                 <Input
                                     id="campaign-goal"
+                                    data-test="campaign-goal"
                                     placeholder="€10,000"
                                     value={newItem?.fundGoal || ''}
                                     onChange={(e) => {
@@ -303,7 +306,7 @@ export default function CampaignCreate() {
                                 Cancel
                             </Button>
 
-                            <Button onClick={handleSubmit} disabled={createCampaign.isPending}>
+                            <Button onClick={handleSubmit} data-test="campaign-submit" disabled={createCampaign.isPending}>
                                 {createCampaign.isPending ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

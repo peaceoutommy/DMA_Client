@@ -106,6 +106,7 @@ export default function CompanyCreate() {
                         <Label htmlFor="company-name">Company Name *</Label>
                         <Input
                             id="company-name"
+                            data-test="company-name"
                             placeholder="Enter company name"
                             value={companyData.name}
                             onChange={(e) => {
@@ -123,6 +124,7 @@ export default function CompanyCreate() {
                         <Label htmlFor="company-registration">Registration Number *</Label>
                         <Input
                             id="company-registration"
+                            data-test="company-registration"
                             placeholder="e.g., 12345678"
                             value={companyData.registrationNumber}
                             onChange={(e) => {
@@ -145,6 +147,7 @@ export default function CompanyCreate() {
                         <Label htmlFor="company-tax">Tax ID *</Label>
                         <Input
                             id="company-tax"
+                            data-test="company-taxId"
                             placeholder="e.g., NL123456789B01"
                             value={companyData.taxId}
                             onChange={(e) => {
@@ -178,7 +181,7 @@ export default function CompanyCreate() {
                                     setCompanyData({ ...companyData, typeId: parseInt(value) })
                                 }
                             >
-                                <SelectTrigger id="company-type">
+                                <SelectTrigger id="company-type" data-test="company-type">
                                     <SelectValue placeholder="Select a company type" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -195,6 +198,7 @@ export default function CompanyCreate() {
                     <Button
                         onClick={handleSubmit}
                         className="w-full mt-2"
+                        data-test="company-submit"
                         disabled={createCompany.isPending}
                     >
                         {createCompany.isPending ? (

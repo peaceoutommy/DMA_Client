@@ -110,8 +110,8 @@ export default function Authenticate() {
             <CardContent className="pb-4">
                 <Tabs defaultValue="login" className="w-full">
                     <TabsList className="grid w-full grid-cols-2 mb-4">
-                        <TabsTrigger value="login">Login</TabsTrigger>
-                        <TabsTrigger value="register">Register</TabsTrigger>
+                        <TabsTrigger value="login" data-test="tab-login">Login</TabsTrigger>
+                        <TabsTrigger value="register" data-test="tab-register">Register</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="login" className="space-y-3">
@@ -194,6 +194,7 @@ export default function Authenticate() {
                             <div className="grid grid-cols-2 gap-3">
                                 <button
                                     type="button"
+                                    data-test="account-type-donor"
                                     onClick={() => setRegisterData({ ...registerData, companyAccount: false })}
                                     className={`relative flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-200 ${
                                         !registerData.companyAccount
@@ -219,6 +220,7 @@ export default function Authenticate() {
 
                                 <button
                                     type="button"
+                                    data-test="account-type-company"
                                     onClick={() => setRegisterData({ ...registerData, companyAccount: true })}
                                     className={`relative flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-200 ${
                                         registerData.companyAccount
@@ -248,6 +250,7 @@ export default function Authenticate() {
                             <Label htmlFor="register-first-name">First name *</Label>
                             <Input
                                 id="register-first-name"
+                                data-test="register-firstName"
                                 placeholder="John"
                                 value={registerData.firstName}
                                 onChange={(e) => {
@@ -265,6 +268,7 @@ export default function Authenticate() {
                             <Label htmlFor="register-last-name">Last name *</Label>
                             <Input
                                 id="register-last-name"
+                                data-test="register-lastName"
                                 placeholder="Doe"
                                 value={registerData.lastName}
                                 onChange={(e) => {
@@ -282,6 +286,7 @@ export default function Authenticate() {
                             <Label htmlFor="register-middle-names">Middle names *</Label>
                             <Input
                                 id="register-middle-names"
+                                data-test="register-middleNames"
                                 placeholder="Michael"
                                 value={registerData.middleNames}
                                 onChange={(e) => {
@@ -299,6 +304,7 @@ export default function Authenticate() {
                             <Label htmlFor="register-username">Username *</Label>
                             <Input
                                 id="register-username"
+                                data-test="register-username"
                                 placeholder="johndoe"
                                 value={registerData.username}
                                 onChange={(e) => {
@@ -316,6 +322,7 @@ export default function Authenticate() {
                             <Label htmlFor="register-email">Email *</Label>
                             <Input
                                 id="register-email"
+                                data-test="register-email"
                                 type="email"
                                 placeholder="you@example.com"
                                 value={registerData.email}
@@ -334,6 +341,7 @@ export default function Authenticate() {
                             <Label htmlFor="register-phone-number">Phone number *</Label>
                             <Input
                                 id="register-phone-number"
+                                data-test="register-phoneNumber"
                                 placeholder="123-456-7890"
                                 value={registerData.phoneNumber}
                                 onChange={(e) => {
@@ -351,6 +359,7 @@ export default function Authenticate() {
                             <Label htmlFor="register-address">Address *</Label>
                             <Input
                                 id="register-address"
+                                data-test="register-address"
                                 placeholder="123 Main St"
                                 value={registerData.address}
                                 onChange={(e) => {
@@ -368,6 +377,7 @@ export default function Authenticate() {
                             <Label htmlFor="register-password">Password *</Label>
                             <Input
                                 id="register-password"
+                                data-test="register-password"
                                 type="password"
                                 placeholder="••••••••"
                                 value={registerData.password}
@@ -416,6 +426,7 @@ export default function Authenticate() {
                             <Label htmlFor="register-confirm">Confirm password *</Label>
                             <Input
                                 id="register-confirm"
+                                data-test="register-confirmPassword"
                                 type="password"
                                 placeholder="••••••••"
                                 value={registerData.confirmPassword}
@@ -433,6 +444,7 @@ export default function Authenticate() {
                         <Button
                             onClick={handleRegister}
                             className="w-full"
+                            data-test="register-submit"
                             disabled={registerMutation.isPending}
                         >
                             {registerMutation.isPending ? (
