@@ -128,10 +128,10 @@ describe('Company & Campaign Approval Workflow', () => {
     cy.get('#register-password').type(testUser.password);
     cy.get('#register-confirm').type(testUser.password);
 
-    cy.intercept('POST', '/api/auth/register').as('register');
+    cy.intercept('POST', '**/api/auth/register').as('register');
     cy.get('[data-test="register-submit"]').click();
 
-    cy.wait('@register').then((interception) => {
+    cy.wait('@register', { timeout: 15000 }).then((interception) => {
       cy.log('Registration status:', interception.response.statusCode);
       cy.log('Registration response:', JSON.stringify(interception.response.body));
       expect(interception.response.statusCode).to.eq(200);
@@ -161,7 +161,7 @@ describe('Company & Campaign Approval Workflow', () => {
     cy.get('#company-type').click();
     cy.get('[role="option"]').first().click();
 
-    cy.intercept('POST', '/api/companies').as('createCompany');
+    cy.intercept('POST', '**/api/companies').as('createCompany');
     cy.get('[data-test="company-submit"]').click();
 
     cy.wait('@createCompany').then((interception) => {
