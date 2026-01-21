@@ -31,6 +31,8 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/test_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
           SPRING_DATASOURCE_USERNAME: root
           SPRING_DATASOURCE_PASSWORD: root
+          SPRING_JPA_HIBERNATE_DDL_AUTO: create
+          SPRING_JPA_SHOW_SQL: "false"
         ports:
           - 8080:8080
 

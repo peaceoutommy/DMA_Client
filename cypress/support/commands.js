@@ -35,17 +35,16 @@ Cypress.Commands.add('apiRegister', (userData) => {
     body: registrationData,
   }).then((response) => {
     expect(response.status).to.eq(200);
-    if (response.body.token) {
-      cy.window().then((win) => {
-        win.localStorage.setItem('auth_token', response.body.token);
-      });
+    const body = response.body;
+    if (body.token) {
+      window.localStorage.setItem('auth_token', body.token);
     }
-    return response.body;
+    return body;
   });
 });
 
 /**
- * Login via API and store token
+ * Login via API and store token in the browser's localStorage
  * @param {string} username - Username or email
  * @param {string} password - Password
  */
@@ -56,9 +55,11 @@ Cypress.Commands.add('apiLogin', (username, password) => {
     body: { username, password },
   }).then((response) => {
     expect(response.status).to.eq(200);
-    if (response.body.token) {
-      cy.window().then((win) => {
-        win.localStorage.setItem('auth_token', response.body.token);
+    const { token } = response.body;
+    if (token) {
+      return cy.window().then((win) => {
+        win.localStorage.setItem('auth_token', token);
+        return response.body;
       });
     }
     return response.body;

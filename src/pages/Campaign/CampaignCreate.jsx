@@ -196,6 +196,7 @@ export default function CampaignCreate() {
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant="outline"
+                                                data-test="campaign-start-date"
                                                 className={cn(
                                                     "w-full justify-start text-left font-normal",
                                                     !newItem?.startDate && "text-muted-foreground",
@@ -225,6 +226,7 @@ export default function CampaignCreate() {
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant="outline"
+                                                data-test="campaign-end-date"
                                                 className={cn(
                                                     "w-full justify-start text-left font-normal",
                                                     !newItem?.endDate && "text-muted-foreground",
@@ -289,6 +291,7 @@ export default function CampaignCreate() {
                                                 accept="image/*"
                                                 multiple
                                                 className="hidden"
+                                                data-test="campaign-image-upload"
                                                 onChange={handleImageUpload}
                                             />
                                         </label>
